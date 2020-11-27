@@ -1,16 +1,16 @@
-## MSC Events Calendar
+# MSC Events Calendar
 
 # Description
 
-Spicificly created plugin to msc.moscow
+Special plugin for `msc.moscow` site.
 
-## Installation
+# Installation
 
 1. Upload `msc-events-calendar.zip` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Dance
 
-## Changelog
+# Changelog
 
-# 1.0.0
+## 1.0.0
 * create a basic structure of WordPress plugin
