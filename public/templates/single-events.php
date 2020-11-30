@@ -1,0 +1,1 @@
+<h1><?php get_the_title(); ?></h1>

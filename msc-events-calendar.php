@@ -7,6 +7,7 @@
  * Version:           1.0.0
  * Author:            Евгений Рыбкин
  * Author URI:        https://github.com/rybkinevg
+ * Text Domain:       msc-events-calendar
  */
 
 // Если вызов файла был напрямую, то заблокировать

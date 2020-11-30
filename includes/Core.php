@@ -28,6 +28,10 @@ class MSCEC_Core
 
     private function load_dependencies()
     {
+        // Добавления зависимостей от сторонних плагинов WordPress
+        require_once(MSCEC_DIR . 'includes/TGM/class-tgm-plugin-activation.php');
+        add_action('tgmpa_register', [$this, 'required_plugins']);
+
         // Специальный класс загрузчик
         require_once(MSCEC_DIR . 'includes/Loader.php');
 
@@ -40,13 +44,61 @@ class MSCEC_Core
         require_once(MSCEC_DIR . 'public/Public.php');
     }
 
+    public function required_plugins()
+    {
+        $plugins = [
+            [
+                'name'               => 'Carbon Fields',
+                'slug'               => 'carbon-fields',
+                'source'             => 'https://carbonfields.net/zip/latest/',
+                'required'           => true, // this plugin is required
+                'external_url'       => 'https://carbonfields.net/',
+                'force_deactivation' => true, // deactivate this plugin when the user switches to another theme
+            ]
+        ];
+
+        $config = [
+            'id'           => 'msc-events-calendar',
+            'default_path' => '',
+            'menu'         => 'tgmpa-install-plugins',
+            'parent_slug'  => 'plugins.php',
+            'capability'   => 'manage_options',
+            'has_notices'  => true,
+            'dismissable'  => true,
+            'dismiss_msg'  => '',
+            'is_automatic' => false,
+            'message'      => '',
+            'strings'      => [
+                'notice_can_install_required' => _n_noop(
+                    'Для корректной работы темы необходимо установить плагин: %1$s.',
+                    'Для корректной работы темы необходимо установить плагины: %1$s.',
+                    'msc-events-calendar'
+                ),
+                'install_link'                => _n_noop(
+                    'Установить плагин',
+                    'Установить плагины',
+                    'msc-events-calendar'
+                ),
+            ]
+        ];
+
+        tgmpa($plugins, $config);
+    }
+
     // Регистрация хуков административной части
     private function define_admin_hooks()
     {
         $plugin_admin = new MSCEC_Admin($this->get_plugin_name(), $this->get_version());
 
+        $this->loader->add_action('init', $plugin_admin, 'register_post_types');
+        $this->loader->add_action('carbon_fields_register_fields', $plugin_admin, 'create_custom_fields');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+
+        $this->loader->add_filter('manage_edit-events_columns', $plugin_admin, 'events_add_columns');
+        $this->loader->add_action('manage_posts_custom_column', $plugin_admin, 'events_fill_columns');
+
+        $this->loader->add_filter('views_edit-events', $plugin_admin, 'show_admin_stats');
     }
 
     // Регистрация хуков публичной части
@@ -56,6 +108,8 @@ class MSCEC_Core
 
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+
+        $this->loader->add_filter('template_include', $plugin_public, 'get_custom_templates');
     }
 
     // Запуск всех хуков
