@@ -94,6 +94,11 @@ class MSCEC_Core
         $this->loader->add_action('carbon_fields_register_fields', $plugin_admin, 'create_custom_fields');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+        $this->loader->add_action('admin_menu', $plugin_admin, 'create_pages');
+        $this->loader->add_action('wp_ajax_import_events', $plugin_admin, 'import_events');
+
+        $this->loader->add_action('restrict_manage_posts', $plugin_admin, 'events_admin_filter');
+        $this->loader->add_action('pre_get_posts', $plugin_admin, 'events_admin_filter_handler');
 
         $this->loader->add_filter('manage_edit-events_columns', $plugin_admin, 'events_add_columns');
         $this->loader->add_action('manage_posts_custom_column', $plugin_admin, 'events_fill_columns');

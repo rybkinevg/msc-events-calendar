@@ -59,10 +59,12 @@ class MSCEC_Admin
     public function events_add_columns($columns)
     {
         unset($columns['date']);
+
         $columns['event_date'] = 'Дата';
         $columns['type']       = 'Тип';
         $columns['organizer']  = 'Организатор';
         $columns['date']  = 'Дата создания';
+
         return $columns;
     }
 
@@ -121,6 +123,76 @@ class MSCEC_Admin
     {
         include_once($this->dir . 'templates/admin-stats.php');
         return $view;
+    }
+
+    // Создаёт страницы внутри типа записи Мероприятия
+    public function create_pages()
+    {
+        add_submenu_page(
+            'edit.php?post_type=events',
+            'Импорт мероприятий',
+            'Импорт',
+            'manage_options',
+            'import',
+            [$this, 'import_page']
+        );
+    }
+
+    // Внешний вид страницы импорта мероприятий
+    public function import_page()
+    {
+        include_once($this->dir . 'templates/import-page.php');
+    }
+
+    // Импорт мероприятий
+    public function import_events()
+    {
+        check_ajax_referer('import_events', 'nonce');
+    }
+
+    /**
+     * @todo сделать форму-фильтр для организаторов
+     */
+    public function events_admin_filter($post_type)
+    {
+        if ('events' !== $post_type) return;
+
+        echo '
+        <select name="events_type">
+            <option value="all">Все типы</option>
+            <option value="default"' . selected('default', @$_GET['events_type'], 0) . '>Общие</option>
+            <option value="online"' .   selected('online', @$_GET['events_type'], 0) . '>Онлайн</option>
+            <option value="inner"' .  selected('inner', @$_GET['events_type'], 0) . '>Внутренние</option>
+        </select>';
+    }
+
+    /**
+     * @todo сделать фильтр по организаторам
+     */
+    public function events_admin_filter_handler($query)
+    {
+        $cs = function_exists('get_current_screen') ? get_current_screen() : null;
+
+        if (!is_admin() || empty($cs->post_type) || $cs->post_type != 'events' || $cs->id != 'edit-events')
+            return;
+
+        if (@$_GET['events_type'] != 'all' && !empty(@$_GET['events_type'])) {
+            $selected_id = @$_GET['events_type'] ?: 20;
+            $query->set(
+                'meta_query',
+                [
+                    [
+                        'key'     => '_type',
+                        'value'   => $selected_id,
+                        'compare' => '='
+                    ]
+                ]
+            );
+        }
+
+        //if( empty($_GET['orderby']) && @ $_GET['sel_season'] != -1 ){
+        //  $query->set( 'orderby', 'menu_order date' );
+        //}
     }
 
     // Регистрирует стили
