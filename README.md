@@ -1,16 +1,16 @@
 # MSC Events Calendar
 
-# Description
+# Описание
 
-Special plugin for `msc.moscow` site.
+Специальный плагин для портала "Мой семейный центр"
 
-# Installation
+# Установка
 
-1. Upload `msc-events-calendar.zip` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Dance
+1. Загрузите `msc-events-calendar.zip` в `/wp-content/plugins/`
+1. Активируйте плагин через установщик плагинов WordPress
+1. Установите зависимости плагина, если есть необходимость
 
-# Changelog
+# Список изменений
 
 ## 1.0.0
-* create a basic structure of WordPress plugin
+* Создана базовая структура файлов плагина
