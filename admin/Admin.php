@@ -8,8 +8,8 @@ class MSCEC_Admin
     // Актуальная версия плагина
     private $version;
 
-    // Путь до файла
-    private $dir = MSCEC_DIR . 'admin/';
+    // Импортированный файл
+    private $imported_file = [];
 
     public function __construct($plugin_name, $version)
     {
@@ -114,14 +114,14 @@ class MSCEC_Admin
     // Дополнительные поля, созданные с помощью плагина Carbon Fields
     public function create_custom_fields()
     {
-        include_once($this->dir . 'custom-fields/settings-page.php');
-        include_once($this->dir . 'custom-fields/events-meta.php');
+        include_once(MSCEC_DIR . 'admin/custom-fields/settings-page.php');
+        include_once(MSCEC_DIR . 'admin/custom-fields/events-meta.php');
     }
 
     // Создаёт блок над таблицей вывода всех мероприятий для произвольного текста
     public function show_admin_stats($view)
     {
-        include_once($this->dir . 'templates/admin-stats.php');
+        include_once(MSCEC_DIR . 'admin/templates/admin-stats.php');
         return $view;
     }
 
@@ -141,13 +141,95 @@ class MSCEC_Admin
     // Внешний вид страницы импорта мероприятий
     public function import_page()
     {
-        include_once($this->dir . 'templates/import-page.php');
+        include_once(MSCEC_DIR . 'admin/templates/import-page.php');
     }
 
     // Импорт мероприятий
-    public function import_events()
+    public function import_events_callback()
     {
-        check_ajax_referer('import_events', 'nonce');
+        check_ajax_referer('import_events_nonce', 'nonce');
+
+        $file = $_FILES['imported-events-file'];
+
+        if (empty($file['name'])) wp_send_json_error('Файлов нет');
+
+        if (!empty($file['error'])) wp_send_json_error('Произошла ошибка во время загрузки файла');
+
+        if (!$this->check_mimes($file)) wp_send_json_error('Неверный тип файла');
+
+        if (!function_exists('wp_handle_upload')) require_once(ABSPATH . 'wp-admin/includes/file.php');
+
+        $overrides = ['test_form' => false];
+
+        $movefile = wp_handle_upload($file, $overrides);
+
+        $this->set_imported_file($movefile, $this->csv_to_array($movefile['url']));
+
+        $html = $this->get_include_contents(MSCEC_DIR . 'admin/templates/template-parts/insert-form.php');
+
+        wp_send_json_success(
+            [
+                'response' => 'Всё ок!',
+                'html' =>  $html
+            ]
+        );
+
+        wp_die();
+    }
+
+    public function check_mimes($file)
+    {
+        $acceptable_mime_types = [
+            'text/plain',
+            'text/csv',
+            'text/comma-separated-values'
+        ];
+
+        $tmp_name = $file['tmp_name'];
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime_type = finfo_file($finfo, $tmp_name);
+
+        $file_mime_type = mime_content_type($tmp_name);
+
+        return in_array($mime_type, $acceptable_mime_types) && in_array($file_mime_type, $acceptable_mime_types);
+    }
+
+    public function set_imported_file($file, $converted)
+    {
+        $this->imported_file['file'] = $file;
+        $this->imported_file['csv'] = $converted;
+    }
+
+    public function unset_imported_file()
+    {
+        $this->imported_file = [];
+    }
+
+    public function csv_to_array($csv_file)
+    {
+        $assoc_array = [];
+
+        if (($handle = fopen($csv_file, "r")) !== false) {
+            if (($data = fgetcsv($handle, 1000, ",")) !== false) {
+                $keys = $data;
+            }
+            while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+                $assoc_array[] = array_combine($keys, $data);
+            }
+            fclose($handle);
+
+            return $assoc_array;
+        } else {
+            return false;
+        }
+    }
+
+    public function get_include_contents($path)
+    {
+        ob_start();
+        include $path;
+        return ob_get_clean();
     }
 
     /**
@@ -200,7 +282,7 @@ class MSCEC_Admin
     {
         wp_enqueue_style(
             $this->plugin_name,
-            $this->dir . 'css/plugin-name-admin.css',
+            MSCEC_URL . 'admin/assets/css/style.css',
             [],
             $this->version,
             'all'
@@ -212,7 +294,7 @@ class MSCEC_Admin
     {
         wp_enqueue_script(
             $this->plugin_name,
-            $this->dir . 'js/plugin-name-admin.js',
+            MSCEC_URL . 'admin/assets/js/script.js',
             ['jquery'],
             $this->version,
             false
