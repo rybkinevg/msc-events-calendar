@@ -9,7 +9,10 @@ class MSCEC_Admin
     private $version;
 
     // Импортированный файл
-    private $imported_file = [];
+    /**
+     * @todo добписать getter функцию
+     */
+    private $imported_file;
 
     public function __construct($plugin_name, $version)
     {
@@ -162,8 +165,7 @@ class MSCEC_Admin
         $overrides = ['test_form' => false];
 
         $movefile = wp_handle_upload($file, $overrides);
-
-        $this->set_imported_file($movefile, $this->csv_to_array($movefile['url']));
+        $this->imported_file = $this->csv_to_array($movefile['url']);
 
         $html = $this->get_include_contents(MSCEC_DIR . 'admin/templates/template-parts/insert-form.php');
 
@@ -195,17 +197,6 @@ class MSCEC_Admin
         return in_array($mime_type, $acceptable_mime_types) && in_array($file_mime_type, $acceptable_mime_types);
     }
 
-    public function set_imported_file($file, $converted)
-    {
-        $this->imported_file['file'] = $file;
-        $this->imported_file['csv'] = $converted;
-    }
-
-    public function unset_imported_file()
-    {
-        $this->imported_file = [];
-    }
-
     public function csv_to_array($csv_file)
     {
         $assoc_array = [];
@@ -230,6 +221,54 @@ class MSCEC_Admin
         ob_start();
         include $path;
         return ob_get_clean();
+    }
+
+    public function insert_events_callback()
+    {
+        check_ajax_referer('insert_events_nonce', 'nonce');
+
+        $keys = $this->clear_post_data($_POST);
+
+        if (empty($keys)) wp_send_json_error('Не выбраны импортируемые данные');
+
+        //$insert_data = $this->sort_array($this->get_imported_file('csv'), $keys);
+
+        //wp_send_json_success($this->get_imported_file());
+
+        $upldir_info = wp_get_upload_dir();
+        $uploads_dir = $upldir_info['basedir'];
+
+        wp_send_json_success(list_files($uploads_dir));
+    }
+
+    public function clear_post_data($post)
+    {
+        unset($post['action']);
+        unset($post['nonce']);
+
+        foreach ($post as $key => $value) {
+            if ($value == 'unset') {
+                unset($post[$key]);
+            }
+        }
+
+        return $post;
+    }
+
+    public function sort_array($data, $keys)
+    {
+        for ($i = 0; $i < count($data); $i++) {
+            foreach ($data[$i] as $key => $value) {
+                if (key_exists($key, $keys)) {
+                    unset($data[$i][$key]);
+                    $data[$i][$keys[$key]] = $value;
+                } else {
+                    unset($data[$i][$key]);
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**

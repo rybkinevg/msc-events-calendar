@@ -1,6 +1,6 @@
 <?php
 
-$array = $this->imported_file['csv'];
+$array = $this->imported_file;
 
 $select_values = [
     'unset'        => 'Не импортировать',

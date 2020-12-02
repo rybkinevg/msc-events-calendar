@@ -97,6 +97,7 @@ class MSCEC_Core
         $this->loader->add_action('admin_menu', $plugin_admin, 'create_pages');
 
         $this->loader->add_action('wp_ajax_import_events_action', $plugin_admin, 'import_events_callback');
+        $this->loader->add_action('wp_ajax_insert_events_action', $plugin_admin, 'insert_events_callback');
 
         $this->loader->add_action('restrict_manage_posts', $plugin_admin, 'events_admin_filter');
         $this->loader->add_action('pre_get_posts', $plugin_admin, 'events_admin_filter_handler');
