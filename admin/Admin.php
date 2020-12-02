@@ -12,7 +12,8 @@ class MSCEC_Admin
     /**
      * @todo добписать getter функцию
      */
-    private $imported_file;
+    private $imported_file_array;
+    private $imported_file_url;
 
     public function __construct($plugin_name, $version)
     {
@@ -165,16 +166,12 @@ class MSCEC_Admin
         $overrides = ['test_form' => false];
 
         $movefile = wp_handle_upload($file, $overrides);
-        $this->imported_file = $this->csv_to_array($movefile['url']);
+        $this->imported_file_url = $movefile['url'];
+        $this->imported_file_array = $this->csv_to_array($movefile['url']);
 
         $html = $this->get_include_contents(MSCEC_DIR . 'admin/templates/template-parts/insert-form.php');
 
-        wp_send_json_success(
-            [
-                'response' => 'Всё ок!',
-                'html' =>  $html
-            ]
-        );
+        wp_send_json_success($html);
 
         wp_die();
     }
@@ -231,20 +228,28 @@ class MSCEC_Admin
 
         if (empty($keys)) wp_send_json_error('Не выбраны импортируемые данные');
 
-        //$insert_data = $this->sort_array($this->get_imported_file('csv'), $keys);
+        $file_url = $_POST['file'];
 
-        //wp_send_json_success($this->get_imported_file());
+        $insert_data = $this->sort_array($this->csv_to_array($file_url), $keys);
 
-        $upldir_info = wp_get_upload_dir();
-        $uploads_dir = $upldir_info['basedir'];
+        $result = $this->insert($insert_data);
 
-        wp_send_json_success(list_files($uploads_dir));
+        if (isset($result['not_inserted']) && !isset($result['inserted'])) {
+            wp_send_json_error($result['not_inserted']);
+        }
+
+        if (!isset($result['not_inserted']) && isset($result['inserted'])) {
+            wp_send_json_success($result['inserted']);
+        }
+
+        wp_send_json_success($result['inserted'] . ', ' . $result['not_inserted']);
     }
 
     public function clear_post_data($post)
     {
         unset($post['action']);
         unset($post['nonce']);
+        unset($post['file']);
 
         foreach ($post as $key => $value) {
             if ($value == 'unset') {
@@ -269,6 +274,50 @@ class MSCEC_Admin
         }
 
         return $data;
+    }
+
+    public function insert($array)
+    {
+        $count_of_inserted = 0;
+        $count_of_not_inserted = 0;
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            if (is_null(get_page_by_title($value['post_title'], OBJECT, 'events'))) {
+                $post_data = [
+                    'post_type'     => 'events',
+                    'post_title'    => $value['post_title'],
+                    'post_content'  => $value['post_content'],
+                    'post_status'   => 'publish',
+                    'post_author'   => 1
+                ];
+
+                $post_id = wp_insert_post(wp_slash($post_data));
+
+                $count_of_inserted++;
+
+                if (!is_wp_error($post_id)) {
+                    update_post_meta($post_id, '_date', $value['date']);
+                    update_post_meta($post_id, '_time_start', $value['time_start']);
+                    update_post_meta($post_id, '_time_end', $value['time_end']);
+                    update_post_meta($post_id, '_organizer', $value['organizer']);
+                    update_post_meta($post_id, '_address', $value['address']);
+                    update_post_meta($post_id, '_place', $value['place']);
+                }
+            } else {
+                $count_of_not_inserted++;
+            }
+        }
+
+        if ($count_of_inserted > 0) {
+            $result['inserted'] = $count_of_inserted . ' мероприятий импортировано';
+        }
+
+        if ($count_of_not_inserted > 0) {
+            $result['not_inserted'] = $count_of_not_inserted . ' мероприятий не импортировано из-за конфликта названия';
+        }
+
+        return $result;
     }
 
     /**

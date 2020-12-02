@@ -1,0 +1,120 @@
+#events-insert .events-insert-table__title {
+    font-weight: bold;
+    color: #0073aa;
+}
+
+#events-insert .events-insert__table td {
+    padding: 13px 10px;
+}
+
+.input-file-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.has-loader {
+    display: inline-block;
+    position: relative;
+    padding-right: 30px;
+}
+
+.has-loader.disabled::after {
+    display: none;
+}
+
+.has-loader::after {
+    content: url('../img/spinner.gif');
+    display: inline-block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.wrapper {
+    border: 1px solid #ccd0d4;
+    box-sizing: border-box;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    background: #fff;
+    margin-top: 10px;
+}
+
+.tabs-container {
+    position: relative;
+    z-index: 1;
+    padding: 12px 12px 0;
+    border-bottom: 1px solid #e2e4e7;
+    background-color: #fbfbfc;
+}
+
+.tabs__list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 -1px;
+}
+.tab{
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #e2e4e7;
+    margin: 0 8px 0 0;
+    background-color: #fbfbfc;
+    font-size: 12px;
+    cursor: pointer;
+}
+.panels{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -1px 0 0;
+    background-color: #fff;
+}
+.panel{
+    display:none;
+    width: 100%;
+    flex: 1 1 100%;
+    border: solid #e2e4e7;
+    border-width: 0 1px 0 0;
+    animation: fadein .8s;
+}
+.panel__inner {
+    padding: 10px 20px 20px 20px;
+    border-bottom: 1px solid #e2e4e7;
+}
+.panel__inner:last-child {
+    border: none;
+}
+@keyframes fadein {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+.panel-title{
+    font-size:1.5em;
+    font-weight:bold
+}
+.wrapper .tabs-radio{
+    display:none;
+}
+#one:checked ~ .panels #one-panel,
+#two:checked ~ .panels #two-panel,
+#three:checked ~ .panels #three-panel{
+    display:block
+}
+#one:checked ~ .tabs-container .tabs__list .tab#one-tab,
+#two:checked ~ .tabs-container .tabs__list .tab#two-tab,
+#three:checked ~ .tabs-container .tabs__list .tab#three-tab{
+    background-color: #fff;
+    border-bottom-color: #fff;
+}
+
+.events-insert__table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.events-insert__buttons {
+    display: flex;
+    justify-content: space-between;
+}
