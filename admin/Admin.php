@@ -264,9 +264,10 @@ class MSCEC_Admin
     {
         for ($i = 0; $i < count($data); $i++) {
             foreach ($data[$i] as $key => $value) {
-                if (key_exists($key, $keys)) {
+                $key_without_spaces = str_replace(" ", "_", $key); // ВАЖНО
+                if (key_exists($key_without_spaces, $keys)) {
                     unset($data[$i][$key]);
-                    $data[$i][$keys[$key]] = $value;
+                    $data[$i][$keys[$key_without_spaces]] = $value;
                 } else {
                     unset($data[$i][$key]);
                 }

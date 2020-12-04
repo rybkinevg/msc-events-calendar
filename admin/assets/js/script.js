@@ -12,8 +12,6 @@ jQuery(document).ready(function () {
     let insertButton = '';
     let insertButtonLoader = '';
 
-    console.log(noticePoint);
-
     jQuery(inputFile).change(function () {
         if (jQuery(this).val()) {
             jQuery(importButton).removeAttr('disabled');

@@ -4,7 +4,7 @@
  * Plugin Name:       MSC Events Calendar
  * Plugin URI:        https://github.com/rybkinevg/msc-events-calendar
  * Description:       Календарь мероприятий для портала "Мой семейный центр"
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Евгений Рыбкин
  * Author URI:        https://github.com/rybkinevg
  * Text Domain:       msc-events-calendar
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 # Константы
 
 // Актуальная версия плагина
-define('MSCEC_VERSION', '1.0.2');
+define('MSCEC_VERSION', '1.0.3');
 
 // Абсолютный путь до плагина
 define('MSCEC_DIR', plugin_dir_path(__FILE__));
