@@ -125,9 +125,9 @@ class MSCEC_Admin
                 if ($type === 'online') {
                     echo 'Онлайн';
                 } else if ($type === 'default') {
-                    echo 'Общие';
+                    echo 'Общее';
                 } else if ($type === 'inner') {
-                    echo 'Внутренние';
+                    echo 'Внутреннее';
                 }
                 break;
             case 'organizer':
@@ -382,6 +382,17 @@ class MSCEC_Admin
                                 }
                                 if ($value[$meta_key] == 'Внутреннее') {
                                     update_post_meta($post_id, '_' . $meta_key, 'inner');
+                                }
+                            }
+                        }
+                        if ($meta_key == 'organizer') {
+
+                            if (isset($value[$meta_key])) {
+
+                                $organizer = get_page_by_title($value[$meta_key], OBJECT, 'events_organizers');
+
+                                if ($organizer) {
+                                    update_post_meta($post_id, '_' . $meta_key, $organizer->post_name);
                                 }
                             }
                         }

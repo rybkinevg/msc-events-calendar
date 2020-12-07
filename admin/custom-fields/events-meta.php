@@ -32,6 +32,8 @@ function get_organizators()
         $organizers['null'] = 'Организаторов не найдено';
     }
 
+    wp_reset_postdata();
+
     return $organizers;
 }
 

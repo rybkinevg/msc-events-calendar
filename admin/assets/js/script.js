@@ -121,4 +121,13 @@ jQuery(document).ready(function () {
         });
     }
 
+    if (jQuery('body').hasClass('post-type-events_organizers')) {
+        jQuery('#menu-posts-events, #menu-posts-events a.wp-has-submenu')
+            .addClass('wp-menu-open wp-has-current-submenu wp-has-submenu')
+            .removeClass('wp-not-current-submenu')
+            .find("li a[href='edit.php?post_type=events_organizers']")
+            .parent()
+            .addClass('current');
+    }
+
 });

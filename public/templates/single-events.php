@@ -1,4 +1,9 @@
-<?php get_header(); ?>
+<?php get_header();
+
+$organizer = get_page_by_title('Отрадное', OBJECT, 'events_organizers');
+echo $organizer->post_name;
+
+?>
 
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
         <!-- Цикл WordPress -->
