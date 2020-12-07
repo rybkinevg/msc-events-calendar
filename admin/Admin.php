@@ -24,38 +24,76 @@ class MSCEC_Admin
     // Регистрирует тип записи Мероприятия
     public function register_post_types()
     {
+        $events_args = [
+            'label'  => null,
+            'labels' => [
+                'name'               => 'Мероприятия', // основное название для типа записи
+                'singular_name'      => 'Мероприятие', // название для одной записи этого типа
+                'add_new'            => 'Добавить мероприятие', // для добавления новой записи
+                'add_new_item'       => 'Добавление мероприятия', // заголовка у вновь создаваемой записи в админ-панели.
+                'edit_item'          => 'Редактирование мероприятия', // для редактирования типа записи
+                'new_item'           => 'Новое мероприятие', // текст новой записи
+                'view_item'          => 'Смотреть мероприятие', // для просмотра записи этого типа.
+                'search_items'       => 'Искать мероприятие', // для поиска по этим типам записи
+                'not_found'          => 'Не найдено', // если в результате поиска ничего не было найдено
+                'not_found_in_trash' => 'Не найдено в корзине', // если не было найдено в корзине
+                'parent_item_colon'  => '', // для родителей (у древовидных типов)
+                'menu_name'          => 'Мероприятия', // название меню
+            ],
+            'description'         => '',
+            'public'              => true,
+            'show_in_menu'        => null,
+            'show_in_rest'        => null,
+            'rest_base'           => null,
+            'menu_position'       => null,
+            'menu_icon'           => null,
+            'hierarchical'        => false,
+            'supports'            => ['title', 'editor'],
+            'taxonomies'          => [],
+            'has_archive'         => false,
+            'rewrite'             => true,
+            'query_var'           => true,
+        ];
+
         register_post_type(
             'events',
-            [
-                'label'  => null,
-                'labels' => [
-                    'name'               => 'Мероприятия', // основное название для типа записи
-                    'singular_name'      => 'Мероприятие', // название для одной записи этого типа
-                    'add_new'            => 'Добавить мероприятие', // для добавления новой записи
-                    'add_new_item'       => 'Добавление мероприятия', // заголовка у вновь создаваемой записи в админ-панели.
-                    'edit_item'          => 'Редактирование мероприятия', // для редактирования типа записи
-                    'new_item'           => 'Новое мероприятие', // текст новой записи
-                    'view_item'          => 'Смотреть мероприятие', // для просмотра записи этого типа.
-                    'search_items'       => 'Искать мероприятие', // для поиска по этим типам записи
-                    'not_found'          => 'Не найдено', // если в результате поиска ничего не было найдено
-                    'not_found_in_trash' => 'Не найдено в корзине', // если не было найдено в корзине
-                    'parent_item_colon'  => '', // для родителей (у древовидных типов)
-                    'menu_name'          => 'Мероприятия', // название меню
-                ],
-                'description'         => '',
-                'public'              => true,
-                'show_in_menu'        => null,
-                'show_in_rest'        => null,
-                'rest_base'           => null,
-                'menu_position'       => null,
-                'menu_icon'           => null,
-                'hierarchical'        => false,
-                'supports'            => ['title', 'editor'],
-                'taxonomies'          => [],
-                'has_archive'         => false,
-                'rewrite'             => true,
-                'query_var'           => true,
-            ]
+            $events_args
+        );
+
+        $events_organizers_args = [
+            'label'  => null,
+            'labels' => [
+                'name'               => 'Организаторы', // основное название для типа записи
+                'singular_name'      => 'Организатор', // название для одной записи этого типа
+                'add_new'            => 'Добавить организатора', // для добавления новой записи
+                'add_new_item'       => 'Добавление организатора', // заголовка у вновь создаваемой записи в админ-панели.
+                'edit_item'          => 'Редактирование организатора', // для редактирования типа записи
+                'new_item'           => 'Новый организатор', // текст новой записи
+                'view_item'          => 'Смотреть организатора', // для просмотра записи этого типа.
+                'search_items'       => 'Искать организатора', // для поиска по этим типам записи
+                'not_found'          => 'Не найдено', // если в результате поиска ничего не было найдено
+                'not_found_in_trash' => 'Не найдено в корзине', // если не было найдено в корзине
+                'parent_item_colon'  => '', // для родителей (у древовидных типов)
+                'menu_name'          => 'Организаторы', // название меню
+            ],
+            'description'         => '',
+            'public'              => true,
+            'publicly_queryable'  => false,
+            'show_in_menu'        => false,
+            'show_in_rest'        => false,
+            'rest_base'           => null,
+            'menu_position'       => null,
+            'hierarchical'        => false,
+            'supports'            => ['title'],
+            'taxonomies'          => [],
+            'has_archive'         => true,
+            'rewrite'             => true,
+            'query_var'           => true,
+        ];
+
+        register_post_type(
+            'events_organizers',
+            $events_organizers_args
         );
     }
 
@@ -97,8 +135,9 @@ class MSCEC_Admin
 
                 $query = new WP_Query(
                     [
-                        'name'      => $organizer,
-                        'post_type' => 'centres'
+                        'name'           => $organizer,
+                        'post_type'      => 'events_organizers',
+                        'posts_per_page' => -1
                     ]
                 );
 
@@ -132,6 +171,14 @@ class MSCEC_Admin
     // Создаёт страницы внутри типа записи Мероприятия
     public function create_pages()
     {
+        add_submenu_page(
+            'edit.php?post_type=events',
+            'Организаторы',
+            'Организаторы',
+            'manage_options',
+            'edit.php?post_type=events_organizers'
+        );
+
         add_submenu_page(
             'edit.php?post_type=events',
             'Импорт мероприятий',
@@ -283,6 +330,27 @@ class MSCEC_Admin
         $count_of_not_inserted = 0;
         $result = [];
 
+        $required_keys = [
+            'post_title',
+            'post_content'
+        ];
+
+        $meta_keys = [
+            'date',
+            'time_start',
+            'time_end',
+            'address',
+            'place',
+            'platform',
+            'link',
+            'password'
+        ];
+
+        $specific_meta_keys = [
+            'type',
+            'organizer'
+        ];
+
         foreach ($array as $key => $value) {
             if (is_null(get_page_by_title($value['post_title'], OBJECT, 'events'))) {
                 $post_data = [
@@ -298,12 +366,26 @@ class MSCEC_Admin
                 $count_of_inserted++;
 
                 if (!is_wp_error($post_id)) {
-                    update_post_meta($post_id, '_date', $value['date']);
-                    update_post_meta($post_id, '_time_start', $value['time_start']);
-                    update_post_meta($post_id, '_time_end', $value['time_end']);
-                    update_post_meta($post_id, '_organizer', $value['organizer']);
-                    update_post_meta($post_id, '_address', $value['address']);
-                    update_post_meta($post_id, '_place', $value['place']);
+                    foreach ($meta_keys as $meta_key) {
+                        if (isset($value[$meta_key])) {
+                            update_post_meta($post_id, '_' . $meta_key, $value[$meta_key]);
+                        }
+                    }
+                    foreach ($specific_meta_keys as $meta_key) {
+                        if ($meta_key == 'type') {
+                            if (isset($value[$meta_key])) {
+                                if ($value[$meta_key] == 'Онлайн') {
+                                    update_post_meta($post_id, '_' . $meta_key, 'online');
+                                }
+                                if ($value[$meta_key] == 'Общее') {
+                                    update_post_meta($post_id, '_' . $meta_key, 'default');
+                                }
+                                if ($value[$meta_key] == 'Внутреннее') {
+                                    update_post_meta($post_id, '_' . $meta_key, 'inner');
+                                }
+                            }
+                        }
+                    }
                 }
             } else {
                 $count_of_not_inserted++;

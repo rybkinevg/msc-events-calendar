@@ -10,25 +10,27 @@ use Carbon_Fields\Field;
 function get_organizators()
 {
     global $post;
-    $organizers = [];
 
     $args = [
+        'post_type' => 'events_organizers',
         'posts_per_page' => -1,
-        'post_type' => 'centres'
+        'post_status' => 'publish'
     ];
 
     $query = new WP_Query($args);
 
+    $organizers = [
+        'not-selected' => 'Выберите организатора'
+    ];
+
     if ($query->have_posts()) {
         while ($query->have_posts()) {
             $query->the_post();
-            $organizers[$post->post_name] = $post->post_title;
+            $organizers[$post->post_name] = get_the_title();
         }
     } else {
         $organizers['null'] = 'Организаторов не найдено';
     }
-
-    wp_reset_postdata();
 
     return $organizers;
 }
@@ -72,7 +74,7 @@ Container::make('post_meta', 'Информация о мероприятии')
                         ]
                     ]
                 )
-                ->set_html('<strong>Ошибка при попытке получить список организаторов</strong><p>К сожалению, организаторов не найдено, чтобы иметь возможность выбирать организаторов нужно указать правильный тип записи в настройках.</p>'),
+                ->set_html('<strong>Ошибка при попытке получить список организаторов</strong><p>К сожалению, организаторов не найдено, чтобы иметь возможность выбирать организаторов нужно их сначала создать.</p>'),
             Field::make('select', 'type', 'Тип мероприятия')
                 ->set_options(
                     [
