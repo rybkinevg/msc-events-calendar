@@ -95,6 +95,8 @@ class MSCEC_Admin
             'events_organizers',
             $events_organizers_args
         );
+
+        flush_rewrite_rules();
     }
 
     // Создание новых колонок в таблице вывода мероприятий
@@ -117,8 +119,13 @@ class MSCEC_Admin
         switch ($columns) {
             case 'event_date':
                 $date = carbon_get_post_meta($post->ID, 'date');
-                $date = date("d.m.Y", strtotime($date));
-                echo $date;
+
+                if ($date) {
+                    $date = date("d.m.Y", strtotime($date));
+                    echo $date;
+                } else {
+                    echo 'Не выбрана';
+                }
                 break;
             case 'type':
                 $type = carbon_get_post_meta($post->ID, 'type');
@@ -279,7 +286,15 @@ class MSCEC_Admin
 
         $insert_data = $this->sort_array($this->csv_to_array($file_url), $keys);
 
+        /**
+         * @todo сделать возвращаемое значение таким, чтобы его можно было проверить, типо все ок или нет
+         */
         $result = $this->insert($insert_data);
+
+        /**
+         * @todo добавлять в историю только есть инсёрт удачный
+         */
+        $this->add_to_history(basename($file_url), $file_url, date("Y-m-d"), date("H:i"), $result['inserted']);
 
         if (isset($result['not_inserted']) && !isset($result['inserted'])) {
             wp_send_json_error($result['not_inserted']);
@@ -457,6 +472,34 @@ class MSCEC_Admin
         //if( empty($_GET['orderby']) && @ $_GET['sel_season'] != -1 ){
         //  $query->set( 'orderby', 'menu_order date' );
         //}
+    }
+
+    /**
+     * Работа с базой
+     * Функция отвечает за добавление файла в историю импортов
+     */
+    public function add_to_history($name, $file, $date, $time, $count)
+    {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'mscec_imports';
+
+        $wpdb->insert(
+            $table_name,
+            [
+                'name' => $name,
+                'date' => $date,
+                'time' => $time,
+                'count' => $count,
+                'file' => $file
+            ],
+            [
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            ]
+        );
     }
 
     // Регистрирует стили

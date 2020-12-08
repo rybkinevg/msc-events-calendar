@@ -1,3 +1,13 @@
+<?php
+
+global $wpdb;
+
+$table_name = $wpdb->prefix . 'mscec_imports';
+
+$history = $wpdb->get_results('SELECT * FROM ' . $table_name);
+
+?>
+
 <div id="events-import-page" class="wrap">
     <h1 class="wp-heading-inline">
         Импорт мероприятий
@@ -36,8 +46,42 @@
                 </div>
             </div>
             <div class="panel" id="two-panel">
-                <div class="panel-inner-title">Take-Away Skills</div>
-                <p>You will learn many aspects of styling web pages! You’ll be able to set up the correct file structure, edit text and colors, and create attractive layouts. With these skills, you’ll be able to customize the appearance of your web pages to suit your every need!</p>
+                <div class="panel__inner">
+                    <h2 class="panel-inner-title">История импортов</h2>
+                    <div class="events-insert__table-wrapper">
+                        <table class="events-insert__table widefat striped">
+                            <thead class="events-insert-table__head">
+                                <tr class='events-insert-table__titles'>
+                                    <td class="events-insert-table__title">ID</td>
+                                    <td class="events-insert-table__title">Название файла</td>
+                                    <td class="events-insert-table__title">Дата</td>
+                                    <td class="events-insert-table__title">Время</td>
+                                    <td class="events-insert-table__title">Количество мероприятий</td>
+                                    <td class="events-insert-table__title">Ссылка на файл</td>
+                                    <td class="events-insert-table__title">Скачать</td>
+                                    <td class="events-insert-table__title">Удалить</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($history as $item) {
+
+                                    echo "<tr>";
+                                    echo "<td>{$item->id}</td>";
+                                    echo "<td>{$item->name}</td>";
+                                    echo "<td>{$item->date}</td>";
+                                    echo "<td>{$item->time}</td>";
+                                    echo "<td>{$item->count}</td>";
+                                    echo "<td>{$item->file}</td>";
+                                    echo "<td>Скачать</td>";
+                                    echo "<td>Удалить</td>";
+                                    echo '</tr>';
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

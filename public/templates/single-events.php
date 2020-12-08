@@ -1,7 +1,7 @@
 <?php get_header();
 
-$organizer = get_page_by_title('Отрадное', OBJECT, 'events_organizers');
-echo $organizer->post_name;
+echo basename('http://msc-events-test/wp-content/uploads/2020/12/342-8.csv', '.csv');
+echo date("H:i:s");
 
 ?>
 

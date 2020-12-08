@@ -91,6 +91,7 @@ class MSCEC_Core
         $plugin_admin = new MSCEC_Admin($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('init', $plugin_admin, 'register_post_types');
+
         $this->loader->add_action('carbon_fields_register_fields', $plugin_admin, 'create_custom_fields');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');

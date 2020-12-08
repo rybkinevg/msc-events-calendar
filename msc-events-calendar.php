@@ -40,8 +40,15 @@ function deactivate_msc_events_calendar()
 	MSCEC_Deactivator::deactivate();
 }
 
+function uninstall_msc_events_calendar()
+{
+	require_once(MSCEC_DIR . 'includes/Uninstall.php');
+	MSCEC_Uninstall::uninstall();
+}
+
 register_activation_hook(__FILE__, 'activate_msc_events_calendar');
 register_deactivation_hook(__FILE__, 'deactivate_msc_events_calendar');
+register_uninstall_hook(__FILE__, 'uninstall_msc_events_calendar');
 
 # Вызов плагина
 
