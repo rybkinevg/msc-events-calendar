@@ -50,7 +50,7 @@ class MSCEC_Admin
             'hierarchical'        => false,
             'supports'            => ['title', 'editor'],
             'taxonomies'          => [],
-            'has_archive'         => false,
+            'has_archive'         => true,
             'rewrite'             => true,
             'query_var'           => true,
         ];
@@ -86,9 +86,9 @@ class MSCEC_Admin
             'hierarchical'        => false,
             'supports'            => ['title'],
             'taxonomies'          => [],
-            'has_archive'         => true,
+            'has_archive'         => false,
             'rewrite'             => true,
-            'query_var'           => true,
+            'query_var'           => false,
         ];
 
         register_post_type(
@@ -105,9 +105,10 @@ class MSCEC_Admin
         unset($columns['date']);
 
         $columns['event_date'] = 'Дата';
+        $columns['openness']   = 'Открытость';
         $columns['type']       = 'Тип';
         $columns['organizer']  = 'Организатор';
-        $columns['date']  = 'Дата создания';
+        $columns['date']       = 'Дата создания';
 
         return $columns;
     }
@@ -124,39 +125,63 @@ class MSCEC_Admin
                     $date = date("d.m.Y", strtotime($date));
                     echo $date;
                 } else {
-                    echo 'Не выбрана';
+                    echo '-';
                 }
+
                 break;
             case 'type':
                 $type = carbon_get_post_meta($post->ID, 'type');
-                if ($type === 'online') {
-                    echo 'Онлайн';
-                } else if ($type === 'default') {
-                    echo 'Общее';
-                } else if ($type === 'inner') {
-                    echo 'Внутреннее';
+
+                if ($type) {
+                    if ($type === 'online') {
+                        echo 'Онлайн';
+                    } else {
+                        echo 'Очное';
+                    }
+                } else {
+                    echo '-';
                 }
+
+                break;
+            case 'openness':
+                $openness = carbon_get_post_meta($post->ID, 'openness');
+
+                if ($openness) {
+                    if ($openness === 'open') {
+                        echo 'Общее';
+                    } else {
+                        echo 'Внутреннее';
+                    }
+                } else {
+                    echo '-';
+                }
+
                 break;
             case 'organizer':
                 $organizer = carbon_get_post_meta($post->ID, 'organizer');
 
-                $query = new WP_Query(
-                    [
-                        'name'           => $organizer,
-                        'post_type'      => 'events_organizers',
-                        'posts_per_page' => -1
-                    ]
-                );
+                if ($organizer) {
 
-                if ($query->have_posts()) {
-                    while ($query->have_posts()) {
-                        $query->the_post();
-                        echo get_the_title();
+                    $query = new WP_Query(
+                        [
+                            'name'           => $organizer,
+                            'post_type'      => 'events_organizers',
+                            'posts_per_page' => -1
+                        ]
+                    );
+
+                    if ($query->have_posts()) {
+                        while ($query->have_posts()) {
+                            $query->the_post();
+                            echo get_the_title();
+                        }
                     }
+
+                    wp_reset_postdata();
                 } else {
-                    echo 'Не выбран';
+                    echo '-';
                 }
-                wp_reset_postdata();
+
                 break;
         }
     }
@@ -282,29 +307,66 @@ class MSCEC_Admin
 
         if (empty($keys)) wp_send_json_error('Не выбраны импортируемые данные');
 
+        if (!in_array('post_title', $keys)) wp_send_json_error('Не выбраны названия мероприятий');
+
+        if (!in_array('post_content', $keys)) wp_send_json_error('Не выбраны описания мероприятий');
+
         $file_url = $_POST['file'];
 
         $insert_data = $this->sort_array($this->csv_to_array($file_url), $keys);
 
-        /**
-         * @todo сделать возвращаемое значение таким, чтобы его можно было проверить, типо все ок или нет
-         */
-        $result = $this->insert($insert_data);
+        $insert_result = $this->insert($insert_data);
+
+        $events_titles = [
+            '%d мероприятие',
+            '%d мероприятия',
+            '%d мероприятий'
+        ];
 
         /**
-         * @todo добавлять в историю только есть инсёрт удачный
+         * Если не импортировано ни одного мероприятия
          */
-        $this->add_to_history(basename($file_url), $file_url, date("Y-m-d"), date("H:i"), $result['inserted']);
+        if (isset($insert_result['not_inserted']) && !isset($insert_result['inserted'])) {
 
-        if (isset($result['not_inserted']) && !isset($result['inserted'])) {
-            wp_send_json_error($result['not_inserted']);
+            $not_inserted_num = $insert_result['not_inserted'];
+            $result = 'Не импортировано ' . $this->declOfNum($not_inserted_num, $events_titles);
+
+            wp_send_json_error($result);
         }
 
-        if (!isset($result['not_inserted']) && isset($result['inserted'])) {
-            wp_send_json_success($result['inserted']);
+        /**
+         * Если импортированы все мероприятия
+         */
+        if (!isset($insert_result['not_inserted']) && isset($insert_result['inserted'])) {
+
+            $inserted_num = $insert_result['inserted'];
+            $result = 'Импортировано ' . $this->declOfNum($inserted_num, $events_titles);
+
+            $this->add_to_history(basename($file_url), $file_url, date("Y-m-d"), current_time('H:i'), $result);
+
+            wp_send_json_success($result);
         }
 
-        wp_send_json_success($result['inserted'] . ', ' . $result['not_inserted']);
+        /**
+         * Если есть импортированные и неимпортированные мероприятия
+         */
+        if (isset($insert_result['not_inserted']) && isset($insert_result['inserted'])) {
+
+            $inserted_num = $insert_result['inserted'];
+            $not_inserted_num = $insert_result['not_inserted'];
+            $result = 'Импортировано ' . $this->declOfNum($inserted_num, $events_titles) . ', не импортировано ' . $this->declOfNum($not_inserted_num, $events_titles);
+
+            $this->add_to_history(basename($file_url), $file_url, date("Y-m-d"), current_time('H:i'), $result);
+
+            wp_send_json_success($result);
+        }
+    }
+
+    public function declOfNum($number, $titles)
+    {
+        $cases = array(2, 0, 1, 1, 1, 2);
+        $format = $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)]];
+        return sprintf($format, $number);
     }
 
     public function clear_post_data($post)
@@ -345,11 +407,6 @@ class MSCEC_Admin
         $count_of_not_inserted = 0;
         $result = [];
 
-        $required_keys = [
-            'post_title',
-            'post_content'
-        ];
-
         $meta_keys = [
             'date',
             'time_start',
@@ -363,52 +420,65 @@ class MSCEC_Admin
 
         $specific_meta_keys = [
             'type',
+            'openness',
             'organizer'
         ];
 
         foreach ($array as $key => $value) {
-            if (is_null(get_page_by_title($value['post_title'], OBJECT, 'events'))) {
-                $post_data = [
-                    'post_type'     => 'events',
-                    'post_title'    => $value['post_title'],
-                    'post_content'  => $value['post_content'],
-                    'post_status'   => 'publish',
-                    'post_author'   => 1
-                ];
 
-                $post_id = wp_insert_post(wp_slash($post_data));
+            $post_data = [
+                'post_type'     => 'events',
+                'post_title'    => $value['post_title'],
+                'post_content'  => $value['post_content'],
+                'post_status'   => 'publish',
+                'post_author'   => 1
+            ];
+
+            $post_id = wp_insert_post(wp_slash($post_data));
+
+            if (!is_wp_error($post_id)) {
 
                 $count_of_inserted++;
 
-                if (!is_wp_error($post_id)) {
-                    foreach ($meta_keys as $meta_key) {
-                        if (isset($value[$meta_key])) {
-                            update_post_meta($post_id, '_' . $meta_key, $value[$meta_key]);
-                        }
+                foreach ($meta_keys as $meta_key) {
+                    if (isset($value[$meta_key])) {
+                        update_post_meta($post_id, '_' . $meta_key, $value[$meta_key]);
                     }
-                    foreach ($specific_meta_keys as $meta_key) {
-                        if ($meta_key == 'type') {
-                            if (isset($value[$meta_key])) {
-                                if ($value[$meta_key] == 'Онлайн') {
-                                    update_post_meta($post_id, '_' . $meta_key, 'online');
-                                }
-                                if ($value[$meta_key] == 'Общее') {
-                                    update_post_meta($post_id, '_' . $meta_key, 'default');
-                                }
-                                if ($value[$meta_key] == 'Внутреннее') {
-                                    update_post_meta($post_id, '_' . $meta_key, 'inner');
-                                }
+                }
+
+                foreach ($specific_meta_keys as $meta_key) {
+                    if ($meta_key == 'type') {
+                        if (isset($value[$meta_key])) {
+
+                            if ($value[$meta_key] == 'Онлайн') {
+                                update_post_meta($post_id, '_' . $meta_key, 'online');
+                            }
+
+                            if ($value[$meta_key] == 'Очное') {
+                                update_post_meta($post_id, '_' . $meta_key, 'default');
                             }
                         }
-                        if ($meta_key == 'organizer') {
+                    }
+                    if ($meta_key == 'openness') {
+                        if (isset($value[$meta_key])) {
 
-                            if (isset($value[$meta_key])) {
+                            if ($value[$meta_key] == 'Общее') {
+                                update_post_meta($post_id, '_' . $meta_key, 'open');
+                            }
 
-                                $organizer = get_page_by_title($value[$meta_key], OBJECT, 'events_organizers');
+                            if ($value[$meta_key] == 'Внутреннее') {
+                                update_post_meta($post_id, '_' . $meta_key, 'inner');
+                            }
+                        }
+                    }
+                    if ($meta_key == 'organizer') {
 
-                                if ($organizer) {
-                                    update_post_meta($post_id, '_' . $meta_key, $organizer->post_name);
-                                }
+                        if (isset($value[$meta_key])) {
+
+                            $organizer = get_page_by_title($value[$meta_key], OBJECT, 'events_organizers');
+
+                            if ($organizer) {
+                                update_post_meta($post_id, '_' . $meta_key, $organizer->post_name);
                             }
                         }
                     }
@@ -419,11 +489,11 @@ class MSCEC_Admin
         }
 
         if ($count_of_inserted > 0) {
-            $result['inserted'] = $count_of_inserted . ' мероприятий импортировано';
+            $result['inserted'] = $count_of_inserted;
         }
 
         if ($count_of_not_inserted > 0) {
-            $result['not_inserted'] = $count_of_not_inserted . ' мероприятий не импортировано из-за конфликта названия';
+            $result['not_inserted'] = $count_of_not_inserted;
         }
 
         return $result;
@@ -439,9 +509,15 @@ class MSCEC_Admin
         echo '
         <select name="events_type">
             <option value="all">Все типы</option>
-            <option value="default"' . selected('default', @$_GET['events_type'], 0) . '>Общие</option>
+            <option value="default"' . selected('default', @$_GET['events_type'], 0) . '>Очные</option>
             <option value="online"' .   selected('online', @$_GET['events_type'], 0) . '>Онлайн</option>
-            <option value="inner"' .  selected('inner', @$_GET['events_type'], 0) . '>Внутренние</option>
+        </select>';
+
+        echo '
+        <select name="events_openness">
+            <option value="all">Общие и внутренние</option>
+            <option value="open"' . selected('open', @$_GET['events_openness'], 0) . '>Общие</option>
+            <option value="inner"' .   selected('inner', @$_GET['events_openness'], 0) . '>Внутренние</option>
         </select>';
     }
 
@@ -469,9 +545,19 @@ class MSCEC_Admin
             );
         }
 
-        //if( empty($_GET['orderby']) && @ $_GET['sel_season'] != -1 ){
-        //  $query->set( 'orderby', 'menu_order date' );
-        //}
+        if (@$_GET['events_openness'] != 'all' && !empty(@$_GET['events_openness'])) {
+            $selected_id = @$_GET['events_openness'] ?: 20;
+            $query->set(
+                'meta_query',
+                [
+                    [
+                        'key'     => '_openness',
+                        'value'   => $selected_id,
+                        'compare' => '='
+                    ]
+                ]
+            );
+        }
     }
 
     /**

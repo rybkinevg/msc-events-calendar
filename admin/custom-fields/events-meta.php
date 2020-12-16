@@ -20,7 +20,7 @@ function get_organizators()
     $query = new WP_Query($args);
 
     $organizers = [
-        'not-selected' => 'Выберите организатора'
+        '' => '-- выберите значение из списка --'
     ];
 
     if ($query->have_posts()) {
@@ -41,8 +41,10 @@ Container::make('post_meta', 'Информация о мероприятии')
     ->where('post_type', '=', 'events')
     ->add_fields(
         [
-            Field::make('date', 'date', 'Дата мероприятия'),
+            Field::make('date', 'date', 'Дата мероприятия')
+                ->set_width(100),
             Field::make('time', 'time_start', 'Время начала')
+                ->set_width(50)
                 ->set_storage_format('H:i')
                 ->set_picker_options(
                     [
@@ -54,6 +56,7 @@ Container::make('post_meta', 'Информация о мероприятии')
                     ]
                 ),
             Field::make('time', 'time_end', 'Время завершения')
+                ->set_width(50)
                 ->set_storage_format('H:i')
                 ->set_picker_options(
                     [
@@ -77,26 +80,28 @@ Container::make('post_meta', 'Информация о мероприятии')
                     ]
                 )
                 ->set_html('<strong>Ошибка при попытке получить список организаторов</strong><p>К сожалению, организаторов не найдено, чтобы иметь возможность выбирать организаторов нужно их сначала создать.</p>'),
+            Field::make('select', 'openness', 'Открытость мероприятия')
+                ->set_options(
+                    [
+                        ''       => '-- выберите значение из списка --',
+                        'open'   => 'Общее',
+                        'inner'  => 'Внутреннее'
+                    ]
+                ),
             Field::make('select', 'type', 'Тип мероприятия')
                 ->set_options(
                     [
-                        'default' => 'Общее',
-                        'online'  => 'Онлайн',
-                        'inner'   => 'Внутреннее'
+                        ''          => '-- выберите значение из списка --',
+                        'online'    => 'Онлайн',
+                        'default'   => 'Очное'
                     ]
                 ),
             Field::make('text', 'address', 'Адрес проведения')
                 ->set_conditional_logic(
                     [
-                        'relation' => 'OR',
                         [
                             'field' => 'type',
                             'value' => 'default',
-                            'compare' => '='
-                        ],
-                        [
-                            'field' => 'type',
-                            'value' => 'inner',
                             'compare' => '='
                         ]
                     ]
@@ -104,15 +109,9 @@ Container::make('post_meta', 'Информация о мероприятии')
             Field::make('text', 'place', 'Место проведения')
                 ->set_conditional_logic(
                     [
-                        'relation' => 'OR',
                         [
                             'field' => 'type',
                             'value' => 'default',
-                            'compare' => '='
-                        ],
-                        [
-                            'field' => 'type',
-                            'value' => 'inner',
                             'compare' => '='
                         ]
                     ]

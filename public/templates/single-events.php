@@ -1,9 +1,4 @@
-<?php get_header();
-
-echo basename('http://msc-events-test/wp-content/uploads/2020/12/342-8.csv', '.csv');
-echo date("H:i:s");
-
-?>
+<?php get_header(); ?>
 
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
         <!-- Цикл WordPress -->

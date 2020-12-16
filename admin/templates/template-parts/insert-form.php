@@ -6,6 +6,7 @@ $url = $this->imported_file_url;
 $select_values = [
     'unset'        => 'Не импортировать',
     'organizer'    => 'Организатор мероприятия',
+    'openness'     => 'Открытость мероприятия',
     'type'         => 'Тип мероприятия',
     'post_title'   => 'Название мероприятия',
     'post_content' => 'Описание мероприятия',
