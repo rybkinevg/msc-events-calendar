@@ -118,6 +118,9 @@ class MSCEC_Core
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
         $this->loader->add_filter('template_include', $plugin_public, 'get_custom_templates');
+
+        $this->loader->add_action('wp_ajax_events_filter', $plugin_public, 'events_filter_callback');
+        $this->loader->add_action('wp_ajax_nopriv_events_filter', $plugin_public, 'events_filter_callback');
     }
 
     // Запуск всех хуков

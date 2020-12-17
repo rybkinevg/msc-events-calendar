@@ -1,0 +1,97 @@
+.dp-note {
+    position: absolute;
+    background: #f26439;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    left: 50%;
+    bottom: 1px;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.msc-events-calendar .datepicker {
+    width: 100%;
+    border-radius: 0;
+}
+
+.msc-events-calendar .datepicker .datepicker--cell.-selected- {
+    color: #fff !important;
+    background: #f26439;
+}
+
+.msc-events-calendar .datepicker .datepicker--cell.-current-,
+.msc-events-calendar .datepicker .datepicker--day-name,
+.msc-events-calendar .datepicker .datepicker--button {
+    color: #f26439;
+}
+
+.msc-events-calendar .post__sidebar-inner {
+    background: #fff;
+}
+
+.msc-events-calendar .form__setting {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.msc-events-calendar .form__label {
+    margin: 0 10px 0 0;
+}
+
+.msc-events-calendar .form__label:last-child {
+    margin: 0;
+}
+
+.mscec-controll {
+    padding-top: 30px;
+}
+
+.mscec-event {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #e1e0d7;
+    background: #fff;
+}
+
+.mscec-event i {
+    color: #f26439;
+    margin-right: 10px;
+}
+
+.mscec-event__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 130px;
+    margin-right: 20px;
+}
+
+.mscec-event__info-item {
+    margin-bottom: 20px;
+}
+
+.mscec-event__info-item:last-child {
+    margin-bottom: 0;
+}
+
+.mscec-event__content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.mscec-event__title {
+    flex: 1 1 auto;
+    margin: 0 0 20px 0;
+}
+
+.mscec-form__item {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.mscec-form__input {
+    width: 100%;
+}

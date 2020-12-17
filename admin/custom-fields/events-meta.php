@@ -3,39 +3,22 @@
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
-/**
- * @todo добавить динамические переменные: тип записи, название организатора, ссылка или перенести в метод класса
- */
-// Получает список организаторов
-function get_organizators()
-{
-    global $post;
+$organizers = [
+    '' => '-- выберите значение из списка --'
+];
 
-    $args = [
-        'post_type' => 'events_organizers',
-        'posts_per_page' => -1,
-        'post_status' => 'publish'
-    ];
+$posts = get_posts(
+    [
+        'numberposts' => -1,
+        'post_type'   => 'events_organizers',
+    ]
+);
 
-    $query = new WP_Query($args);
-
-    $organizers = [
-        '' => '-- выберите значение из списка --'
-    ];
-
-    if ($query->have_posts()) {
-        while ($query->have_posts()) {
-            $query->the_post();
-            $organizers[$post->post_name] = get_the_title();
-        }
-    } else {
-        $organizers['null'] = 'Организаторов не найдено';
-    }
-
-    wp_reset_postdata();
-
-    return $organizers;
+foreach ($posts as $post) {
+    $organizers[$post->post_name] = $post->post_title;
 }
+
+wp_reset_postdata();
 
 Container::make('post_meta', 'Информация о мероприятии')
     ->where('post_type', '=', 'events')
@@ -68,7 +51,7 @@ Container::make('post_meta', 'Информация о мероприятии')
                     ]
                 ),
             Field::make('select', 'organizer', 'Организатор мероприятия')
-                ->set_options('get_organizators'),
+                ->add_options($organizers),
             Field::make('html', 'events_null_organizer')
                 ->set_conditional_logic(
                     [
