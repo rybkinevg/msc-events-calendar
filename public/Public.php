@@ -28,6 +28,40 @@ class MSCEC_Public
         return $template;
     }
 
+    public function events_calendar_callback()
+    {
+        check_ajax_referer('events_calendar_nonce', 'nonce');
+
+        if (isset($_GET['date']) && !empty($_GET['date'])) {
+
+            $date = date("Y-m-d", strtotime($_GET['date']));
+
+            $args = [
+                'post_type' => 'events',
+                'posts_per_page' => -1,
+                'post_status' => 'publish',
+                'order' => 'ASC',
+                'orderby' => 'events-time',
+                'meta_query' => [
+                    'events-date' => [
+                        'key' => 'date',
+                        'value' => $date,
+                        'compare' => '='
+                    ],
+                    'events-time' => [
+                        'key' => '_time_start',
+                        'compare' => 'EXISTS',
+                        'type' => 'TIME'
+                    ]
+                ]
+            ];
+
+            include(MSCEC_DIR . 'public/templates/loop.php');
+        }
+
+        wp_die();
+    }
+
     public function events_filter_callback()
     {
         check_ajax_referer('events_filter_nonce', 'nonce');
@@ -38,12 +72,22 @@ class MSCEC_Public
             'post_status' => 'publish'
         ];
 
-        if (isset($_GET['date'])) {
+        $args['meta_query']['events-date'] = [
+            'key' => '_date',
+            'compare' => 'EXISTS',
+            'type' => 'DATE'
+        ];
 
-            $date = date("Y-m-d", strtotime($_GET['date']));
+        $args['meta_query']['events-time'] = [
+            'key' => '_time_start',
+            'compare' => 'EXISTS',
+            'type' => 'TIME'
+        ];
 
-            $args['orderby'] = 'meta_value_num';
-            $args['meta_key'] = '_time_start';
+        if (isset($_GET['events_date']) && !empty($_GET['events_date'])) {
+
+            $date = date("Y-m-d", strtotime($_GET['events_date']));
+
             $args['meta_query'][] = [
                 'key' => 'date',
                 'value' => $date,
@@ -58,10 +102,6 @@ class MSCEC_Public
         }
 
         if (isset($_GET['events_type']) && !empty($_GET['events_type'])) {
-
-            $args['meta_query'][] = [
-                'relation'     => 'AND',
-            ];
 
             $args['meta_query']['events-date'] = [
                 'key' => '_date',
@@ -89,10 +129,6 @@ class MSCEC_Public
 
         if (isset($_GET['events_organizer']) && !empty($_GET['events_organizer'])) {
 
-            $args['meta_query'][] = [
-                'relation'     => 'AND',
-            ];
-
             $args['meta_query']['events-date'] = [
                 'key' => '_date',
                 'compare' => 'EXISTS',
@@ -117,8 +153,6 @@ class MSCEC_Public
             ];
         }
 
-        $query = new WP_Query($args);
-
         include(MSCEC_DIR . 'public/templates/loop.php');
 
         wp_die();
@@ -130,7 +164,8 @@ class MSCEC_Public
 
         $args = [
             'post_type' => 'events',
-            'posts_per_page' => -1
+            'posts_per_page' => -1,
+            'post_status' => 'publish'
         ];
 
         $query = new WP_Query($args);
@@ -152,46 +187,132 @@ class MSCEC_Public
         return $events;
     }
 
+    static function get_organizator_name($organizator_slug)
+    {
+        $name = '';
+
+        $args = [
+            'post_type' => 'events_organizers',
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+            'name' => $organizator_slug
+        ];
+
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
+
+                $query->the_post();
+
+                $name = carbon_get_post_meta(get_the_ID(), 'name');
+            }
+        } else {
+            $name = 'Не выбран';
+        }
+
+        wp_reset_postdata();
+
+        return $name;
+    }
+
+    static function get_organizator_link($organizator_slug)
+    {
+        $link = '';
+
+        $args = [
+            'post_type' => 'events_organizers',
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+            'name' => $organizator_slug
+        ];
+
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
+
+                $query->the_post();
+
+                $link = carbon_get_post_meta(get_the_ID(), 'link') ? carbon_get_post_meta(get_the_ID(), 'link') : '#';
+            }
+        } else {
+            $link = '#';
+        }
+
+        wp_reset_postdata();
+
+        return $link;
+    }
+
     // Регистрирует стили
     public function enqueue_styles()
     {
-        wp_enqueue_style(
-            $this->plugin_name,
-            MSCEC_URL . 'public/assets/css/style.css',
-            [],
-            $this->version,
-            'all'
-        );
+        if (is_archive('events') || is_singular('events')) {
 
-        wp_enqueue_style(
-            'air-datepicker',
-            MSCEC_URL . 'public/assets/libs/air-datepicker/datepicker.min.css',
-            [],
-            $this->version,
-            'all'
-        );
+            wp_enqueue_style(
+                'choices-base',
+                MSCEC_URL . 'public/assets/libs/choices/base.min.css',
+                [],
+                $this->version,
+                'all'
+            );
+
+            wp_enqueue_style(
+                'choices',
+                MSCEC_URL . 'public/assets/libs/choices/choices.min.css',
+                [],
+                $this->version,
+                'all'
+            );
+
+            wp_enqueue_style(
+                'air-datepicker',
+                MSCEC_URL . 'public/assets/libs/air-datepicker/datepicker.min.css',
+                [],
+                $this->version,
+                'all'
+            );
+
+            wp_enqueue_style(
+                $this->plugin_name,
+                MSCEC_URL . 'public/assets/css/style.css',
+                [],
+                $this->version,
+                'all'
+            );
+        }
     }
 
     // Регистрирует скрипты
     public function enqueue_scripts()
     {
-        wp_enqueue_script(
-            'air-datepicker',
-            MSCEC_URL . 'public/assets/libs/air-datepicker/datepicker.min.js',
-            ['jquery'],
-            $this->version,
-            true
-        );
-
-        wp_enqueue_script(
-            "$this->plugin_name",
-            MSCEC_URL . 'public/assets/js/script.js',
-            ['jquery'],
-            $this->version,
-            true
-        );
-
         if (is_archive('events') || is_singular('events')) {
+
+            wp_enqueue_script(
+                'choices',
+                MSCEC_URL . 'public/assets/libs/choices/choices.min.js',
+                ['jquery'],
+                $this->version,
+                true
+            );
+
+            wp_enqueue_script(
+                'air-datepicker',
+                MSCEC_URL . 'public/assets/libs/air-datepicker/datepicker.min.js',
+                ['jquery'],
+                $this->version,
+                true
+            );
+
+            wp_enqueue_script(
+                "$this->plugin_name",
+                MSCEC_URL . 'public/assets/js/script.js',
+                ['jquery'],
+                $this->version,
+                true
+            );
+
             wp_localize_script(
                 "$this->plugin_name",
                 'ajax',

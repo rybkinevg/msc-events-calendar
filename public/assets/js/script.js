@@ -1,5 +1,8 @@
 jQuery(document).ready(function () {
 
+    const calendarLoader = jQuery('.sidebar__calendar .mscec-loader');
+    const filterLoader = jQuery('.sidebar__filter .mscec-loader');
+
     jQuery('.mscec-datepicker').datepicker({
         toggleSelected: 'click',
         todayButton: new Date(),
@@ -25,27 +28,51 @@ jQuery(document).ready(function () {
             }
         },
         onSelect: (formattedDate, date, inst) => {
+
+            calendarLoader.addClass('show');
+
             jQuery.ajax({
                 url: ajax.url,
                 type: 'GET',
                 data: {
-                    action: 'events_filter',
-                    nonce: jQuery('.events_filter_nonce').val(),
+                    action: 'events_calendar',
+                    nonce: jQuery('.events_calendar_nonce').val(),
                     date: formattedDate
                 },
                 success: function (data) {
-                    jQuery('.mscec-list').html(data);
+                    calendarLoader.removeClass('show');
+                    jQuery('.mscec-events').html(data);
                 },
                 error: function (error) {
+                    calendarLoader.removeClass('show');
                     console.error(error);
                 }
             });
-
-            jQuery('.mscec-datepicker').blur();
         }
     })
 
+    jQuery('.mscec-datepicker').data('datepicker').selectDate(new Date());
+
     const eventsFilterForm = document.getElementById('mscec-filter');
+
+    jQuery('#mscec-filter__date').datepicker({
+        todayButton: new Date()
+    });
+
+    const eventsFilterSelect = document.getElementById('mscec-filter__organizer');
+
+    if (eventsFilterSelect) {
+        const choices = new Choices(
+            eventsFilterSelect,
+            {
+                loadingText: 'Загрузка...',
+                noResultsText: 'Ничего не найдено',
+                noChoicesText: 'Не из чего выбирать',
+                itemSelectText: 'Нажмите чтобы выбрать',
+                shouldSort: false
+            }
+        );
+    }
 
     jQuery('#mscec-filter').submit(function (e) {
 
@@ -53,20 +80,22 @@ jQuery(document).ready(function () {
 
         let data = jQuery('#mscec-filter').serialize();
 
-        jQuery('.wpsec-loader').addClass('show');
+        console.log(typeof data);
+
+        filterLoader.addClass('show');
 
         jQuery.ajax({
             url: ajax.url,
             type: 'GET',
             data: data,
             success: function (data) {
-                jQuery('.wpsec-loader').removeClass('show');
-                console.log(data);
-                if (data) {
-                    jQuery('.mscec-list').html(data);
-                }
+
+                filterLoader.removeClass('show');
+
+                jQuery('.mscec-events').html(data);
             },
             error: function (error) {
+                filterLoader.removeClass('show');
                 console.error(error);
             }
         });

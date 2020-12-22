@@ -11,6 +11,7 @@ $posts = get_posts(
     [
         'numberposts' => -1,
         'post_type'   => 'events_organizers',
+        'post_status' => 'publish'
     ]
 );
 

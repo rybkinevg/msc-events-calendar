@@ -106,7 +106,7 @@ class MSCEC_Core
         $this->loader->add_filter('manage_edit-events_columns', $plugin_admin, 'events_add_columns');
         $this->loader->add_action('manage_posts_custom_column', $plugin_admin, 'events_fill_columns');
 
-        $this->loader->add_filter('views_edit-events', $plugin_admin, 'show_admin_stats');
+        $this->loader->add_filter('views_edit-events', $plugin_admin, 'show_events_archive_link');
     }
 
     // Регистрация хуков публичной части
@@ -121,6 +121,9 @@ class MSCEC_Core
 
         $this->loader->add_action('wp_ajax_events_filter', $plugin_public, 'events_filter_callback');
         $this->loader->add_action('wp_ajax_nopriv_events_filter', $plugin_public, 'events_filter_callback');
+
+        $this->loader->add_action('wp_ajax_events_calendar', $plugin_public, 'events_calendar_callback');
+        $this->loader->add_action('wp_ajax_nopriv_events_calendar', $plugin_public, 'events_calendar_callback');
     }
 
     // Запуск всех хуков

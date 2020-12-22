@@ -191,12 +191,13 @@ class MSCEC_Admin
     {
         include_once(MSCEC_DIR . 'admin/custom-fields/settings-page.php');
         include_once(MSCEC_DIR . 'admin/custom-fields/events-meta.php');
+        include_once(MSCEC_DIR . 'admin/custom-fields/organizers-meta.php');
     }
 
     // Создаёт блок над таблицей вывода всех мероприятий для произвольного текста
-    public function show_admin_stats($view)
+    public function show_events_archive_link($view)
     {
-        include_once(MSCEC_DIR . 'admin/templates/admin-stats.php');
+        include_once(MSCEC_DIR . 'admin/templates/admin-events-archive-link.php');
         return $view;
     }
 
