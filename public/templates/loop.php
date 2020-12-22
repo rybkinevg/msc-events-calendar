@@ -5,7 +5,6 @@ $query = new WP_Query($args);
 if ($query->have_posts()) {
 
 ?>
-
     <ul class="mscec-list list">
 
         <?php
@@ -70,19 +69,47 @@ if ($query->have_posts()) {
 
                 </div>
             </li>
+
         <?php
+
         }
+
         ?>
+
     </ul>
-<?php
+
+    <?php
+
+    if ($query->max_num_pages > 1) {
+
+    ?>
+
+        <script>
+            var events_query = `<?= serialize($query->query_vars); ?>`;
+            var current_page = <?= $query->query_vars['paged'] ?>;
+            var max_pages = <?= $query->max_num_pages; ?>;
+        </script>
+
+    <?php
+
+        if ($args['paged'] === 1) {
+
+            echo "<button id='true_loadmore'>Загрузить ещё</button>";
+        }
+    }
 } else {
-?>
+
+    ?>
     <div class="empty-block">
         <img class="img empty-block__img" src="<?= MSCEC_URL . 'public/assets/img/events-empty.svg' ?>">
         <h2 class="empty-block__title">Ой! Похоже ничего не найдено.</h2>
         <p class="empty-block__text">Попробуйте выбрать другую дату.</p>
     </div>
+
 <?php
+
 }
+
 wp_reset_postdata();
+
 ?>

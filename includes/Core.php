@@ -124,6 +124,9 @@ class MSCEC_Core
 
         $this->loader->add_action('wp_ajax_events_calendar', $plugin_public, 'events_calendar_callback');
         $this->loader->add_action('wp_ajax_nopriv_events_calendar', $plugin_public, 'events_calendar_callback');
+
+        $this->loader->add_action('wp_ajax_loadmore', $plugin_public, 'true_load_posts');
+        $this->loader->add_action('wp_ajax_nopriv_loadmore', $plugin_public, 'true_load_posts');
     }
 
     // Запуск всех хуков

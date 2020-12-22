@@ -38,10 +38,11 @@ class MSCEC_Public
 
             $args = [
                 'post_type' => 'events',
-                'posts_per_page' => -1,
+                'posts_per_page' => 1,
                 'post_status' => 'publish',
                 'order' => 'ASC',
                 'orderby' => 'events-time',
+                'paged' => get_query_var('paged', 1),
                 'meta_query' => [
                     'events-date' => [
                         'key' => 'date',
@@ -68,8 +69,9 @@ class MSCEC_Public
 
         $args = [
             'post_type' => 'events',
-            'posts_per_page' => -1,
-            'post_status' => 'publish'
+            'posts_per_page' => 1,
+            'post_status' => 'publish',
+            'paged' => get_query_var('paged', 1)
         ];
 
         $args['meta_query']['events-date'] = [
@@ -98,7 +100,7 @@ class MSCEC_Public
         if (isset($_GET['events_title']) && !empty($_GET['events_title'])) {
 
             $args['orderby'] = 'relevance';
-            $args['s'] = $_GET['events_title'];
+            $args['s'] = esc_html($_GET['events_title']);
         }
 
         if (isset($_GET['events_type']) && !empty($_GET['events_type'])) {
@@ -243,6 +245,22 @@ class MSCEC_Public
         wp_reset_postdata();
 
         return $link;
+    }
+
+    function true_load_posts()
+    {
+        $args = unserialize(stripslashes($_POST['query']));
+        $args['paged'] = $_POST['page'] + 1;
+
+        foreach ($args as $key => $value) {
+            if (empty($args[$key])) {
+                unset($args[$key]);
+            }
+        }
+
+        include(MSCEC_DIR . 'public/templates/loop.php');
+
+        wp_die();
     }
 
     // Регистрирует стили

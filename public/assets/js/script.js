@@ -1,9 +1,13 @@
-jQuery(document).ready(function () {
+"use strict";
 
-    const calendarLoader = jQuery('.sidebar__calendar .mscec-loader');
-    const filterLoader = jQuery('.sidebar__filter .mscec-loader');
+jQuery(document).ready(function ($) {
 
-    jQuery('.mscec-datepicker').datepicker({
+    const calendarLoader = $('.sidebar__calendar .mscec-loader');
+    const filterLoader = $('.sidebar__filter .mscec-loader');
+
+    let loadMoreBtn;
+
+    $('.mscec-datepicker').datepicker({
         toggleSelected: 'click',
         todayButton: new Date(),
         showOtherMonths: true,
@@ -31,27 +35,34 @@ jQuery(document).ready(function () {
 
             calendarLoader.addClass('show');
 
-            jQuery.ajax({
+            $.ajax({
                 url: ajax.url,
                 type: 'GET',
                 data: {
                     action: 'events_calendar',
-                    nonce: jQuery('.events_calendar_nonce').val(),
+                    nonce: $('.events_calendar_nonce').val(),
                     date: formattedDate
                 },
                 success: function (data) {
+
                     calendarLoader.removeClass('show');
-                    jQuery('.mscec-events').html(data);
+
+                    $('.mscec-events').html(data);
+
+                    loadMoreBtn = $('#true_loadmore');
+
+                    if ('undefined' !== typeof events_query) {
+                        loadMoreBtn.click(load_more);
+                    }
                 },
                 error: function (error) {
+
                     calendarLoader.removeClass('show');
                     console.error(error);
                 }
             });
         }
     })
-
-    jQuery('.mscec-datepicker').data('datepicker').selectDate(new Date());
 
     const eventsFilterForm = document.getElementById('mscec-filter');
 
@@ -74,17 +85,15 @@ jQuery(document).ready(function () {
         );
     }
 
-    jQuery('#mscec-filter').submit(function (e) {
+    $('#mscec-filter').submit(function (e) {
 
         e.preventDefault();
 
-        let data = jQuery('#mscec-filter').serialize();
-
-        console.log(typeof data);
+        let data = $('#mscec-filter').serialize();
 
         filterLoader.addClass('show');
 
-        jQuery.ajax({
+        $.ajax({
             url: ajax.url,
             type: 'GET',
             data: data,
@@ -92,12 +101,45 @@ jQuery(document).ready(function () {
 
                 filterLoader.removeClass('show');
 
-                jQuery('.mscec-events').html(data);
+                $('.mscec-events').html(data);
+
+                loadMoreBtn = $('#true_loadmore');
+
+                if ('undefined' !== typeof events_query) {
+                    loadMoreBtn.click(load_more);
+                }
             },
             error: function (error) {
+
                 filterLoader.removeClass('show');
                 console.error(error);
             }
         });
     });
+
+    function load_more() {
+
+        $(this).text('Загрузка...');
+
+        var data = {
+            'action': 'loadmore',
+            'query': events_query,
+            'page': current_page
+        };
+
+        $.ajax({
+            url: ajax.url, // обработчик
+            data: data, // данные
+            type: 'POST', // тип запроса
+            success: function (data) {
+
+                current_page++;
+
+                loadMoreBtn.text('Загрузить ещё').before(data);
+
+                if (current_page == max_pages) $("#true_loadmore").remove();
+            }
+        });
+    }
+
 });

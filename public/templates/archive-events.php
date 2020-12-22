@@ -16,14 +16,15 @@
 
                             $args = [
                                 'post_type'      => 'events',
-                                'posts_per_page' => -1,
+                                'posts_per_page' => 1,
                                 'post_status'    => 'publish',
                                 'order'          => 'ASC',
                                 'orderby'        => 'events-date',
+                                'paged' => get_query_var('paged', 1),
                                 'meta_query'     => [
                                     'events-date' => [
                                         'key'     => 'date',
-                                        'value'   => date("Y-m-d"),
+                                        'value'   => current_time("Y-m-d"),
                                         'compare' => '='
                                     ],
                                     'events-time' => [
@@ -34,7 +35,7 @@
                                 ]
                             ];
 
-                            require_once(MSCEC_DIR . 'public/templates/loop.php')
+                            require_once(MSCEC_DIR . 'public/templates/loop.php');
 
                             ?>
 
