@@ -294,10 +294,10 @@ class MSCEC_Admin
         $assoc_array = [];
 
         if (($handle = fopen($csv_file, "r")) !== false) {
-            if (($data = fgetcsv($handle, 2000, ",")) !== false) {
+            if (($data = fgetcsv($handle, 10000, ";")) !== false) {
                 $keys = $data;
             }
-            while (($data = fgetcsv($handle, 2000, ",")) !== false) {
+            while (($data = fgetcsv($handle, 10000, ";")) !== false) {
                 $assoc_array[] = array_combine($keys, $data);
             }
             fclose($handle);

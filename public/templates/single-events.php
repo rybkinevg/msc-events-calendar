@@ -74,7 +74,29 @@
 
                                     <div class="mscec-type-online">
                                         <div class="mscec-type-online__item">
-                                            <?= $platform ?>
+                                            <?php
+
+                                            if ($platform == 'WhatsApp') {
+                                                echo '<i class="fa fa-whatsapp" aria-hidden="true"></i>';
+                                            }
+                                            else if ($platform == 'YouTube') {
+                                                echo '<i class="fa fa-youtube-play" aria-hidden="true"></i>';
+                                            }
+                                            else if ($platform == 'Zoom') {
+                                                echo '<i class="fa fa-video-camera" aria-hidden="true"></i>';
+                                            }
+                                            else if ($platform == 'Skype') {
+                                                echo '<i class="fa fa-skype" aria-hidden="true"></i>';
+                                            }
+                                            else if ($platform == 'Вконтакте') {
+                                                echo '<i class="fa fa-vk" aria-hidden="true"></i>';
+                                            } else {
+                                                echo '<i class="fa fa-globe" aria-hidden="true"></i>';
+                                            }
+
+                                            echo $platform;
+
+                                            ?>
                                         </div>
 
                                         <?php

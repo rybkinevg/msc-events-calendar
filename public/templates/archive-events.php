@@ -18,15 +18,10 @@
                                 'post_type'      => 'events',
                                 'posts_per_page' => 5,
                                 'post_status'    => 'publish',
-                                'order'          => 'ASC',
-                                'orderby'        => [
-                                    'events-date' => 'DESC',
-                                    'events-time' => 'ASC'
-                                ],
                                 'paged' => 1,
                                 'meta_query'     => [
                                     'events-date' => [
-                                        'key'     => 'date',
+                                        'key'     => '_date',
                                         'compare' => 'EXISTS',
                                         'type'    => 'DATE'
                                     ],
@@ -35,7 +30,11 @@
                                         'compare' => 'EXISTS',
                                         'type'    => 'TIME'
                                     ]
-                                ]
+                                ],
+                                'orderby'        => [
+                                    'events-date' => 'DESC',
+                                    'events-time' => 'ASC',
+                                ],
                             ];
 
                             require_once(MSCEC_DIR . 'public/templates/loop.php');
