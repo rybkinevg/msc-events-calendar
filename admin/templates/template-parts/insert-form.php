@@ -47,7 +47,7 @@ function get_select_values($values, $id)
             <input type="hidden" name="action" value="insert_events_action" />
             <input type="hidden" name="file" value="<?= $url ?>" />
             <input type="hidden" name="nonce" value="<?= wp_create_nonce('insert_events_nonce') ?>" />
-            <div class="events-insert__table-wrapper">
+            <div class="events-insert__table-wrapper double-scroll">
                 <table class="events-insert__table widefat striped">
                     <thead class="events-insert-table__head">
                         <?php

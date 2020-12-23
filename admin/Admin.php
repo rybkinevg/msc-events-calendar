@@ -245,8 +245,12 @@ class MSCEC_Admin
 
         $overrides = ['test_form' => false];
 
+        add_filter( 'upload_dir', [$this, 'upload_file'] );
         $movefile = wp_handle_upload($file, $overrides);
+        remove_filter( 'upload_dir', [$this, 'upload_file'] );
+
         $this->imported_file_url = $movefile['url'];
+
         $this->imported_file_array = $this->csv_to_array($movefile['url']);
 
         $html = $this->get_include_contents(MSCEC_DIR . 'admin/templates/template-parts/insert-form.php');
@@ -254,6 +258,17 @@ class MSCEC_Admin
         wp_send_json_success($html);
 
         wp_die();
+    }
+
+    public function upload_file($upload)
+    {
+        $upload['basedir'] = MSCEC_DIR;
+        $upload['baseurl'] = MSCEC_URL;
+        $upload['subdir'] = 'imports';
+        $upload['url']  = $upload['baseurl'] . $upload['subdir'];
+        $upload['path'] = $upload['basedir'] . $upload['subdir'];
+
+        return $upload;
     }
 
     public function check_mimes($file)
@@ -279,10 +294,10 @@ class MSCEC_Admin
         $assoc_array = [];
 
         if (($handle = fopen($csv_file, "r")) !== false) {
-            if (($data = fgetcsv($handle, 1000, ",")) !== false) {
+            if (($data = fgetcsv($handle, 2000, ",")) !== false) {
                 $keys = $data;
             }
-            while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+            while (($data = fgetcsv($handle, 2000, ",")) !== false) {
                 $assoc_array[] = array_combine($keys, $data);
             }
             fclose($handle);
@@ -605,9 +620,17 @@ class MSCEC_Admin
     public function enqueue_scripts()
     {
         wp_enqueue_script(
+            'double-scroll',
+            MSCEC_URL . 'admin/assets/lib/double-scroll/double-scroll.min.js',
+            ['jquery'],
+            $this->version,
+            false
+        );
+
+        wp_enqueue_script(
             $this->plugin_name,
             MSCEC_URL . 'admin/assets/js/script.js',
-            ['jquery'],
+            ['jquery', 'double-scroll'],
             $this->version,
             false
         );

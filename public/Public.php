@@ -38,7 +38,7 @@ class MSCEC_Public
 
             $args = [
                 'post_type' => 'events',
-                'posts_per_page' => 1,
+                'posts_per_page' => 5,
                 'post_status' => 'publish',
                 'order' => 'ASC',
                 'orderby' => 'events-time',
@@ -69,7 +69,7 @@ class MSCEC_Public
 
         $args = [
             'post_type' => 'events',
-            'posts_per_page' => 1,
+            'posts_per_page' => 5,
             'post_status' => 'publish',
             'paged' => get_query_var('paged', 1)
         ];

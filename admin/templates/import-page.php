@@ -6,6 +6,15 @@ $table_name = $wpdb->prefix . 'mscec_imports';
 
 $history = $wpdb->get_results('SELECT * FROM ' . $table_name);
 
+if (isset($_GET['delete_history']) && $_GET['delete_history']) {
+
+    $file = MSCEC_DIR . 'imports/' . $_GET['name'];
+
+    wp_delete_file( $file );
+
+    $wpdb->delete( $table_name, ['ID' => $_GET['id']] );
+}
+
 ?>
 
 <div id="events-import-page" class="wrap">
@@ -57,26 +66,30 @@ $history = $wpdb->get_results('SELECT * FROM ' . $table_name);
                                     <td class="events-insert-table__title">Дата</td>
                                     <td class="events-insert-table__title">Время</td>
                                     <td class="events-insert-table__title">Количество мероприятий</td>
-                                    <td class="events-insert-table__title">Ссылка на файл</td>
                                     <td class="events-insert-table__title">Скачать</td>
                                     <td class="events-insert-table__title">Удалить</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                foreach ($history as $item) {
+                                
+                                if ($history) {
+                                    foreach ($history as $item) {
 
-                                    echo "<tr>";
-                                    echo "<td>{$item->id}</td>";
-                                    echo "<td>{$item->name}</td>";
-                                    echo "<td>{$item->date}</td>";
-                                    echo "<td>{$item->time}</td>";
-                                    echo "<td>{$item->count}</td>";
-                                    echo "<td>{$item->file}</td>";
-                                    echo "<td>Скачать</td>";
-                                    echo "<td>Удалить</td>";
-                                    echo '</tr>';
+                                        echo "<tr>";
+                                        echo "<td>{$item->id}</td>";
+                                        echo "<td>{$item->name}</td>";
+                                        echo "<td>{$item->date}</td>";
+                                        echo "<td>{$item->time}</td>";
+                                        echo "<td>{$item->count}</td>";
+                                        echo "<td><a href='{$item->file}'>Скачать</a></td>";
+                                        echo "<td><a href='?post_type=events&page=import&delete_history=true&id={$item->id}&name={$item->name}'>Удалить</a></td>";
+                                        echo '</tr>';
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='7'>Не найдено</td></tr>";
                                 }
+
                                 ?>
                             </tbody>
                         </table>

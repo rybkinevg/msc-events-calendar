@@ -110,8 +110,8 @@
 }
 
 .events-insert__table-wrapper {
-    overflow-x: auto;
     margin-bottom: 20px;
+    max-height: 650px;
 }
 
 .events-insert__buttons {

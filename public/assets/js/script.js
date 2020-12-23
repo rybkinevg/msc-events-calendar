@@ -7,6 +7,11 @@ jQuery(document).ready(function ($) {
 
     let loadMoreBtn;
 
+    if ('undefined' !== typeof events_query) {
+        loadMoreBtn = $('#true_loadmore');
+        loadMoreBtn.click(load_more);
+    }
+
     $('.mscec-datepicker').datepicker({
         toggleSelected: 'click',
         todayButton: new Date(),
@@ -15,7 +20,7 @@ jQuery(document).ready(function ($) {
             let currentDate = date.getDate();
 
             let currentDay = `${currentDate}`.padStart(2, "0");
-            let currentMonth = date.getMonth() + 1;
+            let currentMonth = `${date.getMonth() + 1}`.padStart(2, "0");
             let currentYear = date.getFullYear();
             let fullDate = `${currentYear}-${currentMonth}-${currentDay}`;
 
@@ -103,9 +108,8 @@ jQuery(document).ready(function ($) {
 
                 $('.mscec-events').html(data);
 
-                loadMoreBtn = $('#true_loadmore');
-
                 if ('undefined' !== typeof events_query) {
+                    loadMoreBtn = $('#true_loadmore');
                     loadMoreBtn.click(load_more);
                 }
             },
@@ -141,5 +145,10 @@ jQuery(document).ready(function ($) {
             }
         });
     }
+
+    $('.mscec-sidebar-spoiler').click(function () {
+        $(this).parent().next().slideToggle();
+        $(this).toggleClass('active');
+    });
 
 });

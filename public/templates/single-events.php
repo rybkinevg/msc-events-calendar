@@ -76,12 +76,21 @@
                                         <div class="mscec-type-online__item">
                                             <?= $platform ?>
                                         </div>
+
+                                        <?php
+
+                                        if ($link) {
+
+                                        ?>
+
                                         <div class="mscec-type-online__item">
                                             <i class="fa fa-link" aria-hidden="true"></i>
                                             <a href="<?= $link ?>" target="_blank" class="link link-orange">Ссылка на трансляцию</a>
                                         </div>
 
                                         <?php
+
+                                        }
 
                                         if ($password) {
 
@@ -188,7 +197,7 @@
                     </h2>
                     <div class="post__relative-list">
                         <div class="row">
-                            <ul>
+                            <ul class="ring">
                                 <?php
 
                                 $relative_events_args = [
@@ -200,7 +209,7 @@
                                     'meta_query' => [
                                         'events-date' => [
                                             'key' => 'date',
-                                            'value' => carbon_get_post_meta(get_the_ID(), 'date'),
+                                            'value' => current_time('Y-m-d'),
                                             'compare' => '>='
                                         ]
                                     ]

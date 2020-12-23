@@ -55,6 +55,13 @@ jQuery(document).ready(function () {
                      */
                     jQuery(importPanel).append(respond.data);
 
+                    jQuery('.double-scroll').doubleScroll({
+                        contentCss: {
+                            'overflow-x': 'auto',
+                            'overflow-y': 'auto'
+                        },
+                    });
+
                     insertForm = document.getElementById('events-insert__form');
                     insertButton = document.getElementById('events-insert__submit');
                     insertButtonLoader = document.getElementsByClassName('insert-submit-loader');

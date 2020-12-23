@@ -5,6 +5,7 @@ $query = new WP_Query($args);
 if ($query->have_posts()) {
 
 ?>
+
     <ul class="mscec-list list">
 
         <?php

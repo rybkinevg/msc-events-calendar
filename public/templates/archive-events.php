@@ -16,16 +16,19 @@
 
                             $args = [
                                 'post_type'      => 'events',
-                                'posts_per_page' => 1,
+                                'posts_per_page' => 5,
                                 'post_status'    => 'publish',
                                 'order'          => 'ASC',
-                                'orderby'        => 'events-date',
-                                'paged' => get_query_var('paged', 1),
+                                'orderby'        => [
+                                    'events-date' => 'DESC',
+                                    'events-time' => 'ASC'
+                                ],
+                                'paged' => 1,
                                 'meta_query'     => [
                                     'events-date' => [
                                         'key'     => 'date',
-                                        'value'   => current_time("Y-m-d"),
-                                        'compare' => '='
+                                        'compare' => 'EXISTS',
+                                        'type'    => 'DATE'
                                     ],
                                     'events-time' => [
                                         'key'     => '_time_start',
@@ -64,6 +67,9 @@
                                     <h4 class="post__sidebar-title">
                                         <i class="sidebar__icon fa fa-calendar-check-o" aria-hidden="true"></i>
                                         <span class="sidebar__title">Календарь мероприятий</span>
+                                        <button class="mscec-sidebar-spoiler">
+                                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                        </button>
                                     </h4>
                                     <div class="mscec-controll">
                                         <div class="mscec-controll__inner">
@@ -95,6 +101,9 @@
                                     <h4 class="post__sidebar-title">
                                         <i class="sidebar__icon fa fa-filter" aria-hidden="true"></i>
                                         <span class="sidebar__title">Фильтр мероприятий</span>
+                                        <button class="mscec-sidebar-spoiler">
+                                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                        </button>
                                     </h4>
                                     <div class="mscec-controll">
                                         <div class="mscec-controll__inner">
