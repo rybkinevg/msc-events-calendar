@@ -131,6 +131,7 @@
 .mscec-form__input {
     width: 100%;
     padding: 11.5px;
+    border: 1px solid #ccc;
 }
 
 .msc-events-calendar .choices__inner {
@@ -198,6 +199,10 @@
     transform: rotate(0);
 }
 
+.msc-events-calendar .btn {
+    border: none;
+}
+
 /* Loader */
 
 .mscec-loader {
@@ -212,7 +217,7 @@
     z-index: 2;
 }
 
-.mscec-loader.show {
+.mscec-loader.loading {
     display: flex;
 }
 

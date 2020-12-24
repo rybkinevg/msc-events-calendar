@@ -38,7 +38,7 @@ jQuery(document).ready(function ($) {
         },
         onSelect: (formattedDate, date, inst) => {
 
-            calendarLoader.addClass('show');
+            calendarLoader.addClass('loading');
 
             $.ajax({
                 url: ajax.url,
@@ -50,7 +50,7 @@ jQuery(document).ready(function ($) {
                 },
                 success: function (data) {
 
-                    calendarLoader.removeClass('show');
+                    calendarLoader.removeClass('loading');
 
                     $('.mscec-events').html(data);
 
@@ -62,7 +62,7 @@ jQuery(document).ready(function ($) {
                 },
                 error: function (error) {
 
-                    calendarLoader.removeClass('show');
+                    calendarLoader.removeClass('loading');
                     console.error(error);
                 }
             });
@@ -96,7 +96,7 @@ jQuery(document).ready(function ($) {
 
         let data = $('#mscec-filter').serialize();
 
-        filterLoader.addClass('show');
+        filterLoader.addClass('loading');
 
         $.ajax({
             url: ajax.url,
@@ -104,7 +104,7 @@ jQuery(document).ready(function ($) {
             data: data,
             success: function (data) {
 
-                filterLoader.removeClass('show');
+                filterLoader.removeClass('loading');
 
                 $('.mscec-events').html(data);
 
@@ -115,7 +115,7 @@ jQuery(document).ready(function ($) {
             },
             error: function (error) {
 
-                filterLoader.removeClass('show');
+                filterLoader.removeClass('loading');
                 console.error(error);
             }
         });
