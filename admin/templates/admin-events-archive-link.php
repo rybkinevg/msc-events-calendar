@@ -1,3 +1,3 @@
 <p>
-    <a href="/events">Перейти к списку мероприятий</a>
+    <a href="/events" class="button-primary">Перейти на страницу мероприятий</a>
 </p>
