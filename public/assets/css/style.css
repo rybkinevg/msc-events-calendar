@@ -164,7 +164,7 @@
 }
 
 .mscec-relative-link__date {
-    margin-right: 10px;
+    margin: 0 15px;
 }
 
 .mscec-events {
@@ -201,6 +201,18 @@
 
 .msc-events-calendar .btn {
     border: none;
+}
+
+.msc-events-calendar .relative-list li {
+    margin-bottom: 15px;
+}
+
+.msc-events-calendar .relative-list li:last-child {
+    margin-bottom: 0;
+}
+
+.msc-events-calendar .relative-list li i {
+    color: #f26439;
 }
 
 /* Loader */
@@ -332,16 +344,26 @@
 
 @media (max-width: 1024px) {
 
-    .msc-events-calendar .col-content {
+    .msc-events-calendar .col-content,
+    .msc-events-calendar .col-sidebar {
         width: 100%;
-        order: 2;
         margin-bottom: 20px;
     }
 
-    .msc-events-calendar .col-sidebar {
-        width: 100%;
+    .msc-events-calendar.msc-events-archive .col-sidebar {
         order: 1;
-        margin-bottom: 20px;
+    }
+
+    .msc-events-calendar.msc-events-archive .col-content {
+        order: 2;
+    }
+
+    .msc-events-calendar.msc-events-single .col-sidebar {
+        order: 2;
+    }
+
+    .msc-events-calendar.msc-events-single .col-content {
+        order: 1;
     }
 
     .msc-events-calendar .sidebar__calendar {
@@ -350,7 +372,7 @@
 
     .mscec-event {
         flex-direction: column;
-        padding: 10px;
+        padding: 20px 10px;
     }
 
     .mscec-event i {
@@ -374,6 +396,6 @@
 
     .mscec-event__title {
         font-size: 1.125em;
-        margin: 10px 0;
+        margin: 20px 0;
     }
 }

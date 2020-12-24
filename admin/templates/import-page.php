@@ -66,6 +66,7 @@ if (isset($_GET['delete_history']) && $_GET['delete_history']) {
                                     <td class="events-insert-table__title">Дата</td>
                                     <td class="events-insert-table__title">Время</td>
                                     <td class="events-insert-table__title">Количество мероприятий</td>
+                                    <td class="events-insert-table__title">Пользователь</td>
                                     <td class="events-insert-table__title">Скачать</td>
                                     <td class="events-insert-table__title">Удалить</td>
                                 </tr>
@@ -82,6 +83,7 @@ if (isset($_GET['delete_history']) && $_GET['delete_history']) {
                                         echo "<td>{$item->date}</td>";
                                         echo "<td>{$item->time}</td>";
                                         echo "<td>{$item->count}</td>";
+                                        echo "<td>{$item->user}</td>";
                                         echo "<td><a href='{$item->file}'>Скачать</a></td>";
                                         echo "<td><a href='?post_type=events&page=import&delete_history=true&id={$item->id}&name={$item->name}'>Удалить</a></td>";
                                         echo '</tr>';

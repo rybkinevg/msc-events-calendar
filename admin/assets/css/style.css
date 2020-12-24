@@ -120,5 +120,6 @@
 }
 
 .mscec-table-select {
+    min-width: 165px;
     width: 100%;
 }

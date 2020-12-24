@@ -3,7 +3,7 @@
 <!-- <link rel='stylesheet' id='fontAwesome-css' href='https://мойсемейныйцентр.москва/wp-content/themes/msc-theme/assets/lib/font-awesome/font-awesome.min.css?ver=5.5.1' type='text/css' media='all' /> -->
 <!-- <link rel="stylesheet" href="https://xn--e1aaancaqclcc7aew1d7d.xn--80adxhks/wp-content/themes/msc-theme/style.css?ver=5.5.1"> -->
 
-<main id="content" class="msc-events-calendar">
+<main id="content" class="msc-events-calendar msc-events-archive">
     <div class="container">
         <section id="content__inner">
             <div class="events__content">
@@ -22,13 +22,19 @@
                                 'meta_query'     => [
                                     'events-date' => [
                                         'key'     => '_date',
-                                        'compare' => 'EXISTS',
-                                        'type'    => 'DATE'
+                                        'value'   => current_time('Y-m-d'),
+                                        'type'    => 'DATE',
+                                        'compare' => '>='
                                     ],
                                     'events-time' => [
                                         'key'     => '_time_start',
                                         'compare' => 'EXISTS',
                                         'type'    => 'TIME'
+                                    ],
+                                    'events-type' => [
+                                        'key'     => '_type',
+                                        'value'   => 'open',
+                                        'compare' => '='
                                     ]
                                 ],
                                 'orderby'        => [

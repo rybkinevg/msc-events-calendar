@@ -53,6 +53,11 @@ class MSCEC_Public
                         'key' => '_time_start',
                         'compare' => 'EXISTS',
                         'type' => 'TIME'
+                    ],
+                    'events-type' => [
+                        'key'     => '_type',
+                        'value'   => 'open',
+                        'compare' => '='
                     ]
                 ]
             ];
@@ -84,6 +89,12 @@ class MSCEC_Public
             'key' => '_time_start',
             'compare' => 'EXISTS',
             'type' => 'TIME'
+        ];
+
+        $args['meta_query']['events-type'] = [
+            'key'     => '_type',
+            'value'   => 'default',
+            'compare' => '='
         ];
 
         if (isset($_GET['events_date']) && !empty($_GET['events_date'])) {

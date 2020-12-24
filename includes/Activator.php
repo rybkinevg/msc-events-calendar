@@ -24,6 +24,7 @@ class MSCEC_Activator
                 time varchar(255) DEFAULT NULL,
                 count varchar(255) DEFAULT NULL,
                 file varchar(255) DEFAULT NULL,
+                user varchar(255) DEFAULT NULL,
                 UNIQUE KEY id (id)
                 ) $charset_collate;";
 

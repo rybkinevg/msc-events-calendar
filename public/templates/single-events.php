@@ -3,11 +3,11 @@
 <!-- <link rel='stylesheet' id='fontAwesome-css' href='https://мойсемейныйцентр.москва/wp-content/themes/msc-theme/assets/lib/font-awesome/font-awesome.min.css?ver=5.5.1' type='text/css' media='all' /> -->
 <!-- <link rel="stylesheet" href="https://xn--e1aaancaqclcc7aew1d7d.xn--80adxhks/wp-content/themes/msc-theme/style.css?ver=5.5.1"> -->
 
-<main id="content" class="msc-events-calendar">
+<main id="content" class="msc-events-calendar msc-events-single">
     <div class="container">
         <section class="content__inner">
             <div class="mscec-breadcrumbs">
-                <a href="/events">
+                <a href="/events" class="btn btn-orange">
                     Назад
                 </a>
             </div>
@@ -213,67 +213,81 @@
                     ?>
 
                 </div>
-                <footer class="post__footer">
-                    <h2 class="post__title">
-                        Ближайшие мероприятия
-                    </h2>
-                    <div class="post__relative-list">
-                        <div class="row">
-                            <ul class="ring">
-                                <?php
 
-                                $relative_events_args = [
-                                    'post_type' => 'events',
-                                    'posts_per_page' => 5,
-                                    'post__not_in' => [get_the_ID()],
-                                    'order' => 'ASC',
-                                    'orderby' => 'events-date',
-                                    'meta_query' => [
-                                        'events-date' => [
-                                            'key' => 'date',
-                                            'value' => current_time('Y-m-d'),
-                                            'compare' => '>='
+                <?php
+                
+                if (!wp_is_mobile()) {
+
+                    ?>
+
+                    <footer class="post__footer">
+                        <h2 class="post__title">
+                            Ближайшие мероприятия
+                        </h2>
+                        <div class="post__relative-list">
+                            <div class="row">
+                                <ul class="list relative-list">
+                                    <?php
+
+                                    $relative_events_args = [
+                                        'post_type' => 'events',
+                                        'posts_per_page' => 5,
+                                        'post__not_in' => [get_the_ID()],
+                                        'order' => 'ASC',
+                                        'orderby' => 'events-date',
+                                        'meta_query' => [
+                                            'events-date' => [
+                                                'key' => 'date',
+                                                'value' => current_time('Y-m-d'),
+                                                'compare' => '>='
+                                            ]
                                         ]
-                                    ]
-                                ];
+                                    ];
 
-                                $query = new WP_Query($relative_events_args);
+                                    $query = new WP_Query($relative_events_args);
 
-                                if ($query->have_posts()) {
-                                    while ($query->have_posts()) {
+                                    if ($query->have_posts()) {
+                                        while ($query->have_posts()) {
 
-                                        $query->the_post();
+                                            $query->the_post();
 
-                                        $title = get_the_title();
-                                        $link = wp_make_link_relative(get_permalink());
-                                        $date = carbon_get_post_meta(get_the_ID(), 'date') ? date("d.m.Y", strtotime(carbon_get_post_meta(get_the_ID(), 'date'))) : '%%%';
+                                            $title = get_the_title();
+                                            $link = wp_make_link_relative(get_permalink());
+                                            $date = carbon_get_post_meta(get_the_ID(), 'date') ? date("d.m.Y", strtotime(carbon_get_post_meta(get_the_ID(), 'date'))) : '%%%';
 
-                                ?>
+                                    ?>
 
-                                        <li class="list-item">
-                                            <span class="mscec-relative-link__date">
-                                                <?= $date ?>
-                                            </span>
-                                            <a href="<?= $link ?>" class="link link-orange">
-                                                <span>
-                                                    <?= $title ?>
+                                            <li class="list-item">
+                                                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                                                <span class="mscec-relative-link__date">
+                                                    <?= $date ?>
                                                 </span>
-                                            </a>
-                                        </li>
+                                                <a href="<?= $link ?>" class="link link-orange">
+                                                    <span>
+                                                        <?= $title ?>
+                                                    </span>
+                                                </a>
+                                            </li>
 
-                                <?php
+                                    <?php
+                                        }
+                                    } else {
+                                        echo 'Ничего не найдено';
                                     }
-                                } else {
-                                    echo 'Ничего не найдено';
-                                }
 
-                                wp_reset_postdata();
+                                    wp_reset_postdata();
 
-                                ?>
-                            </ul>
+                                    ?>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </footer>
+                    </footer>
+
+                    <?php
+
+                }
+
+                ?>
             </article>
         </section>
     </div>

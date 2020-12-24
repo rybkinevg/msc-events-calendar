@@ -586,6 +586,8 @@ class MSCEC_Admin
 
         $table_name = $wpdb->prefix . 'mscec_imports';
 
+        $user_info = get_userdata(get_current_user_id());
+
         $wpdb->insert(
             $table_name,
             [
@@ -593,9 +595,11 @@ class MSCEC_Admin
                 'date' => $date,
                 'time' => $time,
                 'count' => $count,
-                'file' => $file
+                'file' => $file,
+                'user' => $user_info->first_name . ' ' . $user_info->last_name
             ],
             [
+                '%s',
                 '%s',
                 '%s',
                 '%s',
