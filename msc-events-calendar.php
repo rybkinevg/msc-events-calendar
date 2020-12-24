@@ -8,6 +8,8 @@
  * Author:            Евгений Рыбкин
  * Author URI:        https://github.com/rybkinevg
  * Text Domain:       msc-events-calendar
+ * GitHub Plugin URI: rybkinevg/msc-events-calendar
+ * GitHub Plugin URI: https://github.com/rybkinevg/msc-events-calendar
  */
 
 // Если вызов файла был напрямую, то заблокировать

@@ -169,7 +169,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mscec-form__item">
-                                                    <input class="btn btn-orange" type="submit" value="Искать">
+                                                    <button class="btn btn-orange" type="submit">Искать</button>
                                                 </div>
                                             </form>
                                         </div>

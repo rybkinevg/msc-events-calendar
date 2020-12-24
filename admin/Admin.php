@@ -289,15 +289,15 @@ class MSCEC_Admin
         return in_array($mime_type, $acceptable_mime_types) && in_array($file_mime_type, $acceptable_mime_types);
     }
 
-    public function csv_to_array($csv_file)
+    public function csv_to_array($csv_file, $separator = ';')
     {
         $assoc_array = [];
 
         if (($handle = fopen($csv_file, "r")) !== false) {
-            if (($data = fgetcsv($handle, 10000, ";")) !== false) {
+            if (($data = fgetcsv($handle, 10000, $separator)) !== false) {
                 $keys = $data;
             }
-            while (($data = fgetcsv($handle, 10000, ";")) !== false) {
+            while (($data = fgetcsv($handle, 10000, $separator)) !== false) {
                 $assoc_array[] = array_combine($keys, $data);
             }
             fclose($handle);

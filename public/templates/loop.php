@@ -95,7 +95,7 @@ if ($query->have_posts()) {
 
         if ($args['paged'] === 1) {
 
-            echo "<button id='true_loadmore'>Загрузить ещё</button>";
+            echo "<button id='true_loadmore' class='btn btn-orange'>Загрузить ещё</button>";
         }
     }
 } else {
