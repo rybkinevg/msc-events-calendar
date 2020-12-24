@@ -118,3 +118,7 @@
     display: flex;
     justify-content: space-between;
 }
+
+.mscec-table-select {
+    width: 100%;
+}

@@ -13,7 +13,7 @@ class MSCEC_Admin
      * @todo добписать getter функцию
      */
     private $imported_file_array;
-    private $imported_file_url;
+    private $imported_file_path;
 
     public function __construct($plugin_name, $version)
     {
@@ -249,9 +249,9 @@ class MSCEC_Admin
         $movefile = wp_handle_upload($file, $overrides);
         remove_filter( 'upload_dir', [$this, 'upload_file'] );
 
-        $this->imported_file_url = $movefile['url'];
+        $this->imported_file_path = $movefile['file'];
 
-        $this->imported_file_array = $this->csv_to_array($movefile['url']);
+        $this->imported_file_array = $this->csv_to_array($this->imported_file_path);
 
         $html = $this->get_include_contents(MSCEC_DIR . 'admin/templates/template-parts/insert-form.php');
 

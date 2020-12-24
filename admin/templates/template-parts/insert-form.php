@@ -1,7 +1,7 @@
 <?php
 
 $array = $this->imported_file_array;
-$url = $this->imported_file_url;
+$url = $this->imported_file_path;
 
 $select_values = [
     'unset'        => 'Не импортировать',
@@ -28,7 +28,7 @@ function get_select_values($values, $id)
         $options .= "<option value='$key'>$value</option>";
     }
 
-    return "<select id='$id' name='$id'>$options<select>";
+    return "<select id='$id' class='mscec-table-select' name='$id'>$options<select>";
 }
 
 ?>
