@@ -46,7 +46,7 @@ class MSCEC_Admin
             'show_in_rest'        => null,
             'rest_base'           => null,
             'menu_position'       => null,
-            'menu_icon'           => null,
+            'menu_icon'           => 'dashicons-calendar-alt',
             'hierarchical'        => false,
             'supports'            => ['title', 'editor'],
             'taxonomies'          => [],
