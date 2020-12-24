@@ -32,7 +32,7 @@
                                         'type'    => 'TIME'
                                     ],
                                     'events-type' => [
-                                        'key'     => '_type',
+                                        'key'     => '_openness',
                                         'value'   => 'open',
                                         'compare' => '='
                                     ]
