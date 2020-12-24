@@ -269,14 +269,6 @@ class MSCEC_Public
         if (is_archive('events') || is_singular('events')) {
 
             wp_enqueue_style(
-                'choices-base',
-                MSCEC_URL . 'public/assets/libs/choices/base.min.css',
-                [],
-                $this->version,
-                'all'
-            );
-
-            wp_enqueue_style(
                 'choices',
                 MSCEC_URL . 'public/assets/libs/choices/choices.min.css',
                 [],

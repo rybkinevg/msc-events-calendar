@@ -186,7 +186,7 @@
 
 .msc-events-calendar .mscec-sidebar-spoiler {
     background: transparent;
-    padding: 0;
+    border: 0;
     color: #f26439;
     transform-origin: center;
     transition: transform 0.3s;
