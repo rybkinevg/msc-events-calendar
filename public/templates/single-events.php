@@ -225,61 +225,59 @@
                             Ближайшие мероприятия
                         </h2>
                         <div class="post__relative-list">
-                            <div class="row">
-                                <ul class="list relative-list">
-                                    <?php
+                            <ul class="list relative-list">
+                                <?php
 
-                                    $relative_events_args = [
-                                        'post_type' => 'events',
-                                        'posts_per_page' => 5,
-                                        'post__not_in' => [get_the_ID()],
-                                        'order' => 'ASC',
-                                        'orderby' => 'events-date',
-                                        'meta_query' => [
-                                            'events-date' => [
-                                                'key' => 'date',
-                                                'value' => current_time('Y-m-d'),
-                                                'compare' => '>='
-                                            ]
+                                $relative_events_args = [
+                                    'post_type' => 'events',
+                                    'posts_per_page' => 5,
+                                    'post__not_in' => [get_the_ID()],
+                                    'order' => 'ASC',
+                                    'orderby' => 'events-date',
+                                    'meta_query' => [
+                                        'events-date' => [
+                                            'key' => 'date',
+                                            'value' => current_time('Y-m-d'),
+                                            'compare' => '>='
                                         ]
-                                    ];
+                                    ]
+                                ];
 
-                                    $query = new WP_Query($relative_events_args);
+                                $query = new WP_Query($relative_events_args);
 
-                                    if ($query->have_posts()) {
-                                        while ($query->have_posts()) {
+                                if ($query->have_posts()) {
+                                    while ($query->have_posts()) {
 
-                                            $query->the_post();
+                                        $query->the_post();
 
-                                            $title = get_the_title();
-                                            $link = wp_make_link_relative(get_permalink());
-                                            $date = carbon_get_post_meta(get_the_ID(), 'date') ? date("d.m.Y", strtotime(carbon_get_post_meta(get_the_ID(), 'date'))) : '%%%';
+                                        $title = get_the_title();
+                                        $link = wp_make_link_relative(get_permalink());
+                                        $date = carbon_get_post_meta(get_the_ID(), 'date') ? date("d.m.Y", strtotime(carbon_get_post_meta(get_the_ID(), 'date'))) : '%%%';
 
-                                    ?>
+                                ?>
 
-                                            <li class="list-item">
-                                                <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                                                <span class="mscec-relative-link__date">
-                                                    <?= $date ?>
+                                        <li class="list-item">
+                                            <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                                            <span class="mscec-relative-link__date">
+                                                <?= $date ?>
+                                            </span>
+                                            <a href="<?= $link ?>" class="link link-orange">
+                                                <span>
+                                                    <?= $title ?>
                                                 </span>
-                                                <a href="<?= $link ?>" class="link link-orange">
-                                                    <span>
-                                                        <?= $title ?>
-                                                    </span>
-                                                </a>
-                                            </li>
+                                            </a>
+                                        </li>
 
-                                    <?php
-                                        }
-                                    } else {
-                                        echo 'Ничего не найдено';
+                                <?php
                                     }
+                                } else {
+                                    echo 'Ничего не найдено';
+                                }
 
-                                    wp_reset_postdata();
+                                wp_reset_postdata();
 
-                                    ?>
-                                </ul>
-                            </div>
+                                ?>
+                            </ul>
                         </div>
                     </footer>
 

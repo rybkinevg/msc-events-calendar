@@ -38,7 +38,7 @@
                                     ]
                                 ],
                                 'orderby'        => [
-                                    'events-date' => 'DESC',
+                                    'events-date' => 'ASC',
                                     'events-time' => 'ASC',
                                 ],
                             ];
