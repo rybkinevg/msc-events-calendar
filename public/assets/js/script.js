@@ -139,7 +139,11 @@ jQuery(document).ready(function ($) {
 
                 current_page++;
 
-                loadMoreBtn.text('Загрузить ещё').before(data);
+                console.log(current_page);
+
+                $('.mscec-list').append(data);
+
+                loadMoreBtn.text('Загрузить ещё');
 
                 if (current_page == max_pages) $("#true_loadmore").remove();
             }

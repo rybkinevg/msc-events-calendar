@@ -54,7 +54,7 @@ class MSCEC_Public
                         'compare' => 'EXISTS',
                         'type' => 'TIME'
                     ],
-                    'events-type' => [
+                    'events-openness' => [
                         'key'     => '_openness',
                         'value'   => 'open',
                         'compare' => '='
@@ -62,7 +62,47 @@ class MSCEC_Public
                 ]
             ];
 
-            include(MSCEC_DIR . 'public/templates/loop.php');
+            $query = new WP_Query($args);
+
+            if ($query->have_posts()) { ?>
+
+                <ul class="mscec-list list">
+
+                <?php include(MSCEC_DIR . 'public/templates/loop.php'); ?>
+
+                </ul>
+
+                <?php
+
+                if ($query->max_num_pages > 1) { ?>
+
+                    <script>
+                        var events_query = `<?= serialize($query->query_vars); ?>`;
+                        var current_page = <?= $query->query_vars['paged'] ?>;
+                        var max_pages = <?= $query->max_num_pages; ?>;
+                    </script>
+
+                <?php
+
+                    if ($args['paged'] === 1) {
+
+                        echo "<button id='true_loadmore' class='btn btn-orange'>Загрузить ещё</button>";
+                    }
+                }
+
+            } else { ?>
+
+                <div class="empty-block">
+                    <img class="img empty-block__img" src="<?= MSCEC_URL . 'public/assets/img/events-empty.svg' ?>">
+                    <h2 class="empty-block__title">Ой! Похоже ничего не найдено.</h2>
+                    <p class="empty-block__text">Попробуйте выбрать другую дату.</p>
+                </div>
+            
+            <?php
+            
+            }
+            
+            wp_reset_postdata();
         }
 
         wp_die();
@@ -89,12 +129,6 @@ class MSCEC_Public
             'key' => '_time_start',
             'compare' => 'EXISTS',
             'type' => 'TIME'
-        ];
-
-        $args['meta_query']['events-type'] = [
-            'key'     => '_type',
-            'value'   => 'default',
-            'compare' => '='
         ];
 
         if (isset($_GET['events_date']) && !empty($_GET['events_date'])) {
@@ -166,7 +200,47 @@ class MSCEC_Public
             ];
         }
 
-        include(MSCEC_DIR . 'public/templates/loop.php');
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) { ?>
+
+            <ul class="mscec-list list">
+
+            <?php include(MSCEC_DIR . 'public/templates/loop.php'); ?>
+
+            </ul>
+
+            <?php
+
+            if ($query->max_num_pages > 1) { ?>
+
+                <script>
+                    var events_query = `<?= serialize($query->query_vars); ?>`;
+                    var current_page = <?= $query->query_vars['paged'] ?>;
+                    var max_pages = <?= $query->max_num_pages; ?>;
+                </script>
+
+            <?php
+
+                if ($args['paged'] === 1) {
+
+                    echo "<button id='true_loadmore' class='btn btn-orange'>Загрузить ещё</button>";
+                }
+            }
+
+        } else { ?>
+
+            <div class="empty-block">
+                <img class="img empty-block__img" src="<?= MSCEC_URL . 'public/assets/img/events-empty.svg' ?>">
+                <h2 class="empty-block__title">Ой! Похоже ничего не найдено.</h2>
+                <p class="empty-block__text">Попробуйте выбрать другую дату.</p>
+            </div>
+        
+        <?php
+        
+        }
+        
+        wp_reset_postdata();
 
         wp_die();
     }
@@ -263,13 +337,11 @@ class MSCEC_Public
         $args = unserialize(stripslashes($_POST['query']));
         $args['paged'] = $_POST['page'] + 1;
 
-        foreach ($args as $key => $value) {
-            if (empty($args[$key])) {
-                unset($args[$key]);
-            }
-        }
+        $query = new WP_Query($args);
 
         include(MSCEC_DIR . 'public/templates/loop.php');
+        
+        wp_reset_postdata();
 
         wp_die();
     }
