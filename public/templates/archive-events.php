@@ -1,42 +1,7 @@
-<?php 
+<?php get_header(); ?>
 
-get_header();
-
-$args = [
-    'post_type'      => 'events',
-    'posts_per_page' => 5,
-    'post_status'    => 'publish',
-    'paged' => 1,
-    'meta_query'     => [
-        'events-date' => [
-            'key'     => '_date',
-            'value'   => current_time('Y-m-d'),
-            'type'    => 'DATE',
-            'compare' => '>='
-        ],
-        'events-time' => [
-            'key'     => '_time_start',
-            'compare' => 'EXISTS',
-            'type'    => 'TIME'
-        ],
-        'events-openness' => [
-            'key'     => '_openness',
-            'value'   => 'open',
-            'compare' => '='
-        ]
-    ],
-    'orderby'        => [
-        'events-date' => 'ASC',
-        'events-time' => 'ASC',
-    ],
-];
-
-$query = new WP_Query($args);
-
-?>
-
-<link rel='stylesheet' id='fontAwesome-css' href='https://мойсемейныйцентр.москва/wp-content/themes/msc-theme/assets/lib/font-awesome/font-awesome.min.css?ver=5.5.1' type='text/css' media='all' />
-<link rel="stylesheet" href="https://xn--e1aaancaqclcc7aew1d7d.xn--80adxhks/wp-content/themes/msc-theme/style.css?ver=5.5.1">
+<!-- <link rel='stylesheet' id='fontAwesome-css' href='https://мойсемейныйцентр.москва/wp-content/themes/msc-theme/assets/lib/font-awesome/font-awesome.min.css?ver=5.5.1' type='text/css' media='all' /> -->
+<!-- <link rel="stylesheet" href="https://xn--e1aaancaqclcc7aew1d7d.xn--80adxhks/wp-content/themes/msc-theme/style.css?ver=5.5.1"> -->
 
 <main id="content" class="msc-events-calendar msc-events-archive">
     <div class="container">
@@ -49,51 +14,39 @@ $query = new WP_Query($args);
 
                             <?php
 
-                            // сделать блок с текстом - нашлось столько то мероприятий
-                            // так же через $_GET отлавливать запрос даты и тд.
-                            // вынести в loop весь кусок .col .col-content
-                            // в JS сделать добавление в блок mscec-events (доп класс блока row)
+                            $args = [
+                                'post_type'      => 'events',
+                                'posts_per_page' => 5,
+                                'post_status'    => 'publish',
+                                'paged' => 1,
+                                'meta_query'     => [
+                                    'events-date' => [
+                                        'key'     => '_date',
+                                        'value'   => current_time('Y-m-d'),
+                                        'type'    => 'DATE',
+                                        'compare' => '>='
+                                    ],
+                                    'events-time' => [
+                                        'key'     => '_time_start',
+                                        'compare' => 'EXISTS',
+                                        'type'    => 'TIME'
+                                    ],
+                                    'events-type' => [
+                                        'key'     => '_openness',
+                                        'value'   => 'open',
+                                        'compare' => '='
+                                    ]
+                                ],
+                                'orderby'        => [
+                                    'events-date' => 'ASC',
+                                    'events-time' => 'ASC',
+                                ],
+                            ];
 
-                            if ($query->have_posts()) { ?>
+                            require_once(MSCEC_DIR . 'public/templates/loop.php');
 
-                                <ul class="mscec-list list">
+                            ?>
 
-                                <?php require_once(MSCEC_DIR . 'public/templates/loop.php'); ?>
-
-                                </ul>
-
-                                <?php
-
-                                if ($query->max_num_pages > 1) { ?>
-
-                                    <script>
-                                        var events_query = `<?= serialize($query->query_vars); ?>`;
-                                        var current_page = <?= $query->query_vars['paged'] ?>;
-                                        var max_pages = <?= $query->max_num_pages; ?>;
-                                    </script>
-
-                                <?php
-
-                                    if ($args['paged'] === 1) {
-
-                                        echo "<button id='true_loadmore' class='btn btn-orange'>Загрузить ещё</button>";
-                                    }
-                                }
-
-                            } else { ?>
-
-                                <div class="empty-block">
-                                    <img class="img empty-block__img" src="<?= MSCEC_URL . 'public/assets/img/events-empty.svg' ?>">
-                                    <h2 class="empty-block__title">Ой! Похоже ничего не найдено.</h2>
-                                    <p class="empty-block__text">Попробуйте выбрать другую дату.</p>
-                                </div>
-                            
-                            <?php
-                            
-                            }
-                            
-                            wp_reset_postdata(); ?>
-                        
                         </div>
                     </div>
                     <div class="col col-sidebar">
