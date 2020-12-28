@@ -52,7 +52,8 @@ jQuery(document).ready(function ($) {
 
                     calendarLoader.removeClass('loading');
 
-                    $('.mscec-events').html(data);
+                    //$('.mscec-events').html(data);
+                    $('.mscec-events').append(data);
 
                     loadMoreBtn = $('#true_loadmore');
 
