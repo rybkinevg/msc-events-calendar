@@ -32,9 +32,9 @@ class MSCEC_Public
     {
         check_ajax_referer('events_calendar_nonce', 'nonce');
 
-        if (isset($_GET['date']) && !empty($_GET['date'])) {
+        if (isset($_GET['events_date']) && !empty($_GET['events_date'])) {
 
-            $date = date("Y-m-d", strtotime($_GET['date']));
+            $date = date("Y-m-d", strtotime($_GET['events_date']));
 
             $args = [
                 'post_type' => 'events',
@@ -54,13 +54,17 @@ class MSCEC_Public
                         'compare' => 'EXISTS',
                         'type' => 'TIME'
                     ],
-                    'events-type' => [
+                    'events-openness' => [
                         'key'     => '_openness',
                         'value'   => 'open',
                         'compare' => '='
                     ]
                 ]
             ];
+
+            $events_main = false;
+
+            $query = new WP_Query($args);
 
             include(MSCEC_DIR . 'public/templates/loop.php');
         }
@@ -91,17 +95,16 @@ class MSCEC_Public
             'type' => 'TIME'
         ];
 
-        $args['meta_query']['events-type'] = [
-            'key'     => '_type',
-            'value'   => 'default',
-            'compare' => '='
+        $args['orderby'] = [
+            'events-date' => 'DESC',
+            'events-time' => 'ASC'
         ];
 
         if (isset($_GET['events_date']) && !empty($_GET['events_date'])) {
 
             $date = date("Y-m-d", strtotime($_GET['events_date']));
 
-            $args['meta_query'][] = [
+            $args['meta_query']['events-date'] = [
                 'key' => 'date',
                 'value' => $date,
                 'compare' => '='
@@ -116,55 +119,25 @@ class MSCEC_Public
 
         if (isset($_GET['events_type']) && !empty($_GET['events_type'])) {
 
-            $args['meta_query']['events-date'] = [
-                'key' => '_date',
-                'compare' => 'EXISTS',
-                'type' => 'DATE'
-            ];
-
-            $args['meta_query']['events-time'] = [
-                'key' => '_time_start',
-                'compare' => 'EXISTS',
-                'type' => 'TIME'
-            ];
-
             $args['meta_query']['events-type'] = [
                 'key' => '_type',
                 'value' => $_GET['events_type'],
                 'compare' => '='
             ];
-
-            $args['orderby'] = [
-                'events-date' => 'DESC',
-                'events-time' => 'ASC'
-            ];
         }
 
         if (isset($_GET['events_organizer']) && !empty($_GET['events_organizer'])) {
-
-            $args['meta_query']['events-date'] = [
-                'key' => '_date',
-                'compare' => 'EXISTS',
-                'type' => 'DATE'
-            ];
-
-            $args['meta_query']['events-time'] = [
-                'key' => '_time_start',
-                'compare' => 'EXISTS',
-                'type' => 'TIME'
-            ];
 
             $args['meta_query']['events-organizer'] = [
                 'key' => 'organizer',
                 'value' => $_GET['events_organizer'],
                 'compare' => '='
             ];
-
-            $args['orderby'] = [
-                'events-date' => 'DESC',
-                'events-time' => 'ASC'
-            ];
         }
+
+        $events_main = false;
+
+        $query = new WP_Query($args);
 
         include(MSCEC_DIR . 'public/templates/loop.php');
 
@@ -258,16 +231,20 @@ class MSCEC_Public
         return $link;
     }
 
-    function true_load_posts()
+    static function declOfNum($number, $titles)
+    {
+        $cases = array(2, 0, 1, 1, 1, 2);
+        $format = $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)]];
+        return sprintf($format, $number);
+    }
+
+    function events_load_more()
     {
         $args = unserialize(stripslashes($_POST['query']));
+
         $args['paged'] = $_POST['page'] + 1;
 
-        foreach ($args as $key => $value) {
-            if (empty($args[$key])) {
-                unset($args[$key]);
-            }
-        }
+        $query = new WP_Query($args);
 
         include(MSCEC_DIR . 'public/templates/loop.php');
 

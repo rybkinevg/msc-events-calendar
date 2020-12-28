@@ -215,6 +215,52 @@
     color: #f26439;
 }
 
+.mscec-query__info.hide {
+    display: none;
+}
+
+.mscec-query__info {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #e1e0d7;
+    background: #fff;
+}
+
+.mscec-query__count {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.mscec-query__count i {
+    color: #f26439;
+    font-size: 1.3rem;
+}
+
+.mscec-query__text {
+    width: 100%;
+    margin: 0 10px;
+}
+
+.mscec-query__inner {
+    display: none;
+    padding: 20px 0;
+}
+
+.mscec-query__item {
+    margin-bottom: 15px;
+}
+
+.mscec-query__item:last-child {
+    margin-bottom: 0;
+}
+
+.mscec-loadmore-btn {
+    width: 100%;
+}
+
 /* Loader */
 
 .mscec-loader {
@@ -350,12 +396,16 @@
         margin-bottom: 20px;
     }
 
-    .msc-events-calendar.msc-events-archive .col-sidebar {
+    .msc-events-calendar.msc-events-archive .col-one.mscec-query {
         order: 1;
     }
 
-    .msc-events-calendar.msc-events-archive .col-content {
+    .msc-events-calendar.msc-events-archive .col-sidebar {
         order: 2;
+    }
+
+    .msc-events-calendar.msc-events-archive .col-content {
+        order: 3;
     }
 
     .msc-events-calendar.msc-events-single .col-sidebar {

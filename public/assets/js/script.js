@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
     let loadMoreBtn;
 
     if ('undefined' !== typeof events_query) {
-        loadMoreBtn = $('#true_loadmore');
+        loadMoreBtn = $('.mscec-loadmore-btn');
         loadMoreBtn.click(load_more);
     }
 
@@ -46,7 +46,7 @@ jQuery(document).ready(function ($) {
                 data: {
                     action: 'events_calendar',
                     nonce: $('.events_calendar_nonce').val(),
-                    date: formattedDate
+                    events_date: formattedDate
                 },
                 success: function (data) {
 
@@ -54,7 +54,15 @@ jQuery(document).ready(function ($) {
 
                     $('.mscec-events').html(data);
 
-                    loadMoreBtn = $('#true_loadmore');
+                    $('.mscec-query').empty();
+                    $('.mscec-query').append($('.mscec-query__info'));
+
+                    $('.mscec-query .mscec-sidebar-spoiler').click(function () {
+                        $(this).parent().next().slideToggle();
+                        $(this).toggleClass('active');
+                    });
+
+                    loadMoreBtn = $('.mscec-loadmore-btn');
 
                     if ('undefined' !== typeof events_query) {
                         loadMoreBtn.click(load_more);
@@ -108,8 +116,16 @@ jQuery(document).ready(function ($) {
 
                 $('.mscec-events').html(data);
 
+                $('.mscec-query').empty();
+                $('.mscec-query').append($('.mscec-query__info'));
+
+                $('.mscec-query .mscec-sidebar-spoiler').click(function () {
+                    $(this).parent().next().slideToggle();
+                    $(this).toggleClass('active');
+                });
+
                 if ('undefined' !== typeof events_query) {
-                    loadMoreBtn = $('#true_loadmore');
+                    loadMoreBtn = $('.mscec-loadmore-btn');
                     loadMoreBtn.click(load_more);
                 }
             },
@@ -141,12 +157,13 @@ jQuery(document).ready(function ($) {
 
                 loadMoreBtn.text('Загрузить ещё').before(data);
 
-                if (current_page == max_pages) $("#true_loadmore").remove();
+                if (current_page == max_pages) $(".mscec-loadmore-btn").remove();
             }
         });
     }
 
-    $('.mscec-sidebar-spoiler').click(function () {
+    $('.sidebar__item .mscec-sidebar-spoiler').click(function () {
+        console.log($(this));
         $(this).parent().next().slideToggle();
         $(this).toggleClass('active');
     });

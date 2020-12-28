@@ -1,8 +1,97 @@
 <?php
 
-$query = new WP_Query($args);
-
 if ($query->have_posts()) {
+
+    if ($args['paged'] === 1) {
+
+        $class = ($events_main) ? 'hide' : '';
+
+        $events_titles = [
+            '%d мероприятие',
+            '%d мероприятия',
+            '%d мероприятий'
+        ];
+
+        $date = isset($_GET['events_date']) ? $_GET['events_date'] : null;
+
+        $count = MSCEC_Public::declOfNum($query->found_posts, $events_titles);
+
+        $type = isset($_GET['events_type']) ? $_GET['events_type'] : null;
+
+        $organizer = isset($_GET['events_organizer']) ? MSCEC_Public::get_organizator_name($_GET['events_organizer']) : null;
+
+        $search = isset($_GET['events_title']) ? $_GET['events_title'] : null;
+
+        ?>
+
+            <div class='mscec-query__info <?= $class ?>'>
+                <div class="mscec-query__count">
+                    <i class="fa fa-calendar-check-o sidebar-icon" aria-hidden="true"></i>
+                    <span class="mscec-query__text">Найдено <?= $count ?></span>
+                    <button class="mscec-sidebar-spoiler active">
+                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="mscec-query__inner">
+
+                    <?php
+                    
+                    if ($date) {
+
+                    ?>
+
+                    <div class='mscec-query__item'>
+                        Выбранная дата <?= $date ?>
+                    </div>
+
+                    <?php
+
+                    }
+
+                    if ($type) {
+
+                        $type = ($type == 'online') ? 'онлайн' : 'очные';
+
+                        ?>
+        
+                        <div class='mscec-query__item'>
+                            Тип мероприятий <?= $type ?>
+                        </div>
+        
+                        <?php
+                        
+                    }
+
+                    if ($organizer) {
+
+                        ?>
+        
+                        <div class='mscec-query__item'>
+                            Организатор <?= $organizer ?>
+                        </div>
+        
+                        <?php
+        
+                    }
+
+                    if ($search) {
+
+                        ?>
+        
+                        <div class='mscec-query__item'>
+                            Поисковый запрос <?= $search ?>
+                        </div>
+        
+                        <?php
+        
+                    }
+                    
+                    ?>
+                </div>
+            </div>
+
+        <?php
+    }
 
 ?>
 
@@ -95,7 +184,7 @@ if ($query->have_posts()) {
 
         if ($args['paged'] === 1) {
 
-            echo "<button id='true_loadmore' class='btn btn-orange'>Загрузить ещё</button>";
+            echo "<button class='mscec-loadmore-btn btn btn-orange'>Загрузить ещё</button>";
         }
     }
 } else {
