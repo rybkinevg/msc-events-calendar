@@ -77,10 +77,12 @@ if (isset($_GET['delete_history']) && $_GET['delete_history']) {
                                 if ($history) {
                                     foreach ($history as $item) {
 
+                                        $date = date('d.m.Y', strtotime($item->date));
+
                                         echo "<tr>";
                                         echo "<td>{$item->id}</td>";
                                         echo "<td>{$item->name}</td>";
-                                        echo "<td>{$item->date}</td>";
+                                        echo "<td>{$date}</td>";
                                         echo "<td>{$item->time}</td>";
                                         echo "<td>{$item->count}</td>";
                                         echo "<td>{$item->user}</td>";
