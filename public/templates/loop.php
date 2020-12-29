@@ -12,22 +12,22 @@ if ($query->have_posts()) {
             '%d мероприятий'
         ];
 
-        $date = isset($_GET['events_date']) ? $_GET['events_date'] : null;
+        $date = (isset($_GET['events_date']) && !empty($_GET['events_date'])) ? $_GET['events_date'] : null;
 
         $count = MSCEC_Public::declOfNum($query->found_posts, $events_titles);
 
-        $type = isset($_GET['events_type']) ? $_GET['events_type'] : null;
+        $type = (isset($_GET['events_type']) && !empty($_GET['events_type'])) ? $_GET['events_type'] : 'Все';
 
-        $organizer = isset($_GET['events_organizer']) ? MSCEC_Public::get_organizator_name($_GET['events_organizer']) : null;
+        $organizer = (isset($_GET['events_organizer']) && !empty($_GET['events_organizer'])) ? MSCEC_Public::get_organizator_name($_GET['events_organizer']) : 'Все';
 
-        $search = isset($_GET['events_title']) ? $_GET['events_title'] : null;
+        $search = (isset($_GET['events_title']) && !empty($_GET['events_title'])) ? $_GET['events_title'] : null;
 
         ?>
 
             <div class='mscec-query__info <?= $class ?>'>
                 <div class="mscec-query__count">
                     <i class="fa fa-calendar-check-o sidebar-icon" aria-hidden="true"></i>
-                    <span class="mscec-query__text">Найдено <?= $count ?></span>
+                    <span class="mscec-query__text">Найдено <strong><?= $count ?></strong></span>
                     <button class="mscec-sidebar-spoiler active">
                         <i class="fa fa-chevron-down" aria-hidden="true"></i>
                     </button>
@@ -41,7 +41,7 @@ if ($query->have_posts()) {
                     ?>
 
                     <div class='mscec-query__item'>
-                        Выбранная дата <?= $date ?>
+                        Выбранная дата: <?= $date ?>
                     </div>
 
                     <?php
@@ -50,12 +50,17 @@ if ($query->have_posts()) {
 
                     if ($type) {
 
-                        $type = ($type == 'online') ? 'онлайн' : 'очные';
+                        if ($type == 'online') {
+                            $type = 'Онлайн';
+                        }
+                        else if ($type == 'default') {
+                            $type = 'Очные';
+                        }
 
                         ?>
         
                         <div class='mscec-query__item'>
-                            Тип мероприятий <?= $type ?>
+                            Тип мероприятий: <?= $type ?>
                         </div>
         
                         <?php
@@ -67,7 +72,7 @@ if ($query->have_posts()) {
                         ?>
         
                         <div class='mscec-query__item'>
-                            Организатор <?= $organizer ?>
+                            Организатор: <?= $organizer ?>
                         </div>
         
                         <?php
@@ -79,7 +84,7 @@ if ($query->have_posts()) {
                         ?>
         
                         <div class='mscec-query__item'>
-                            Поисковый запрос <?= $search ?>
+                            Поисковый запрос: <?= $search ?>
                         </div>
         
                         <?php

@@ -49,18 +49,36 @@ $query = new WP_Query($args);
                     <div class="col col-one mscec-query">
 
                     <?php
+
+                    $events_titles = [
+                        '%d мероприятие',
+                        '%d мероприятия',
+                        '%d мероприятий'
+                    ];
                     
                     $date = $query->meta_query->queries['events-date']['value'] ? date('d.m.Y', strtotime($query->meta_query->queries['events-date']['value'])) : '';
-                    $count = $query->found_posts;
+                    $count = MSCEC_Public::declOfNum($query->found_posts, $events_titles);
 
                     ?>
 
                         <div class='mscec-query__info'>
-                            <div class='mscec-query__item'>
-                                Найдено <?= $count ?> мероприятий
+                            <div class="mscec-query__count">
+                                <i class="fa fa-calendar-check-o sidebar-icon" aria-hidden="true"></i>
+                                <span class="mscec-query__text">Найдено <strong><?= $count ?></strong></span>
+                                <button class="mscec-sidebar-spoiler active">
+                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                </button>
                             </div>
-                            <div class='mscec-query__item'>
-                                Дата <?= $date ?>
+                            <div class="mscec-query__inner">
+                                <div class='mscec-query__item'>
+                                    Выбранная дата: <?= $date ?> и позднее
+                                </div>
+                                <div class='mscec-query__item'>
+                                    Тип мероприятий: Все
+                                </div>
+                                <div class='mscec-query__item'>
+                                    Организатор: Все
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -7,6 +7,11 @@ jQuery(document).ready(function ($) {
 
     let loadMoreBtn;
 
+    $('.mscec-query .mscec-sidebar-spoiler').click(function () {
+        $(this).parent().next().slideToggle();
+        $(this).toggleClass('active');
+    });
+
     if ('undefined' !== typeof events_query) {
         loadMoreBtn = $('.mscec-loadmore-btn');
         loadMoreBtn.click(load_more);

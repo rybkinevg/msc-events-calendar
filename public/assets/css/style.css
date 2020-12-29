@@ -193,6 +193,7 @@
     transition: transform 0.3s;
     transform: rotate(180deg);
     padding: 0 5px;
+    outline: none;
 }
 
 .msc-events-calendar .mscec-sidebar-spoiler.active {
@@ -246,7 +247,7 @@
 
 .mscec-query__inner {
     display: none;
-    padding: 20px 0;
+    padding-top: 20px;
 }
 
 .mscec-query__item {
@@ -396,11 +397,11 @@
         margin-bottom: 20px;
     }
 
-    .msc-events-calendar.msc-events-archive .col-one.mscec-query {
+    .msc-events-calendar.msc-events-archive .col-sidebar {
         order: 1;
     }
 
-    .msc-events-calendar.msc-events-archive .col-sidebar {
+    .msc-events-calendar.msc-events-archive .col-one.mscec-query {
         order: 2;
     }
 
