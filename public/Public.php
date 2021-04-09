@@ -135,6 +135,24 @@ class MSCEC_Public
             ];
         }
 
+        if (isset($_GET['events_form']) && !empty($_GET['events_form'])) {
+
+            $args['meta_query']['event_form'] = [
+                'key'     => 'event_form',
+                'value'   => $_GET['events_form'],
+                'compare' => '='
+            ];
+        }
+
+        if (isset($_GET['events_cat']) && !empty($_GET['events_cat'])) {
+
+            $args['meta_query']['event_cat'] = [
+                'key'     => 'event_cat',
+                'value'   => $_GET['events_cat'],
+                'compare' => '='
+            ];
+        }
+
         $events_main = false;
 
         $query = new WP_Query($args);
@@ -149,9 +167,9 @@ class MSCEC_Public
         $events = [];
 
         $args = [
-            'post_type' => 'events',
+            'post_type'      => 'events',
             'posts_per_page' => -1,
-            'post_status' => 'publish'
+            'post_status'    => 'publish'
         ];
 
         $query = new WP_Query($args);
@@ -178,10 +196,10 @@ class MSCEC_Public
         $name = '';
 
         $args = [
-            'post_type' => 'events_organizers',
-            'post_status' => 'publish',
+            'post_type'      => 'events_organizers',
+            'post_status'    => 'publish',
             'posts_per_page' => 1,
-            'name' => $organizator_slug
+            'name'           => $organizator_slug
         ];
 
         $query = new WP_Query($args);
@@ -231,15 +249,23 @@ class MSCEC_Public
         return $link;
     }
 
-    public static function get_event_cat($key)
+    // EVENT CATEGORIES
+
+    public static function get_event_cats()
     {
         $cats = [
-            ''        => '-- выберите значение из списка --',
             'ndro'    => 'Налаживание детско-родительских отношений',
             'nomchs'  => 'Налаживание отношений между членами семьи',
             'rsnik'   => 'Развитие социальных навыков и компетенций',
             'pusadip' => 'Повышение уровня социальной адаптации детей и подростков'
         ];
+
+        return $cats;
+    }
+
+    public static function get_event_cat_name($key)
+    {
+        $cats = self::get_event_cats();
 
         if (array_key_exists($key, $cats)) {
 
@@ -250,10 +276,11 @@ class MSCEC_Public
         }
     }
 
-    public static function get_event_form($key)
+    // EVENT FORMS
+
+    public static function get_event_forms()
     {
         $forms = [
-            ''     => '-- выберите значение из списка --',
             'pt'   => 'Психологический тренинг',
             'at'   => 'Арт-терапия',
             'mk'   => 'Мастер-класс',
@@ -261,6 +288,13 @@ class MSCEC_Public
             'pk'   => 'Подростковый клуб',
             'drz'  => 'Детско-родительское занятие'
         ];
+
+        return $forms;
+    }
+
+    public static function get_event_form_name($key)
+    {
+        $forms = self::get_event_forms();
 
         if (array_key_exists($key, $forms)) {
 

@@ -88,11 +88,44 @@ jQuery(document).ready(function ($) {
         todayButton: new Date()
     });
 
-    const eventsFilterSelect = document.getElementById('mscec-filter__organizer');
+    // Выпадающий список организаторов
+    const eventsFilterSelectOrganizer = document.getElementById('mscec-filter__organizer');
 
-    if (eventsFilterSelect) {
-        const choices = new Choices(
-            eventsFilterSelect,
+    if (eventsFilterSelectOrganizer) {
+        const eventsOrganizerFilter = new Choices(
+            eventsFilterSelectOrganizer,
+            {
+                loadingText: 'Загрузка...',
+                noResultsText: 'Ничего не найдено',
+                noChoicesText: 'Не из чего выбирать',
+                itemSelectText: 'Нажмите чтобы выбрать',
+                shouldSort: false
+            }
+        );
+    }
+
+    // Выпадающий список категорий
+    const eventsFilterSelectCat = document.getElementById('mscec-filter__cat');
+
+    if (eventsFilterSelectCat) {
+        const eventsCatFilter = new Choices(
+            eventsFilterSelectCat,
+            {
+                loadingText: 'Загрузка...',
+                noResultsText: 'Ничего не найдено',
+                noChoicesText: 'Не из чего выбирать',
+                itemSelectText: 'Нажмите чтобы выбрать',
+                shouldSort: false
+            }
+        );
+    }
+
+    // Выпадающий список форм проведения
+    const eventsFilterSelectForm = document.getElementById('mscec-filter__form');
+
+    if (eventsFilterSelectForm) {
+        const eventsFormFilter = new Choices(
+            eventsFilterSelectForm,
             {
                 loadingText: 'Загрузка...',
                 noResultsText: 'Ничего не найдено',

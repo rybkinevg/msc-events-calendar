@@ -33,8 +33,8 @@ get_header();
                             $platform = carbon_get_post_meta(get_the_ID(), 'platform');
                             $link = carbon_get_post_meta(get_the_ID(), 'link');
                             $password = carbon_get_post_meta(get_the_ID(), 'password');
-                            $event_cat = MSCEC_Public::get_event_cat(carbon_get_post_meta(get_the_ID(), 'event_cat'));
-                            $event_form = MSCEC_Public::get_event_form(carbon_get_post_meta(get_the_ID(), 'event_form'));
+                            $event_cat = MSCEC_Public::get_event_cat_name(carbon_get_post_meta(get_the_ID(), 'event_cat'));
+                            $event_form = MSCEC_Public::get_event_form_name(carbon_get_post_meta(get_the_ID(), 'event_form'));
 
                             // Иногда ломает $post, поэтому вызывается последним
                             $organizer_slug = carbon_get_post_meta(get_the_ID(), 'organizer');

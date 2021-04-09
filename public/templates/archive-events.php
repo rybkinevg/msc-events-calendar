@@ -192,6 +192,45 @@ $query = new WP_Query($args);
                                                         ?>
                                                     </select>
                                                 </div>
+
+                                                <div class="mscec-form__item">
+                                                    <label class="mscec-form__label" for="mscec-filter__cat">
+                                                        Категории
+                                                    </label>
+                                                    <select id="mscec-filter__cat" name="events_cat">
+                                                        <option value="">Все</option>
+                                                        <?php
+
+                                                        $cats = MSCEC_Public::get_event_cats();
+
+                                                        foreach ($cats as $key => $value) {
+
+                                                            echo "<option value='{$key}'>{$value}</option>";
+                                                        }
+
+                                                        ?>
+                                                    </select>
+                                                </div>
+
+                                                <div class="mscec-form__item">
+                                                    <label class="mscec-form__label" for="mscec-filter__form">
+                                                        Формы проведения
+                                                    </label>
+                                                    <select id="mscec-filter__form" name="events_form">
+                                                        <option value="">Все</option>
+                                                        <?php
+
+                                                        $forms = MSCEC_Public::get_event_forms();
+
+                                                        foreach ($forms as $key => $value) {
+
+                                                            echo "<option value='{$key}'>{$value}</option>";
+                                                        }
+
+                                                        ?>
+                                                    </select>
+                                                </div>
+
                                                 <div class="mscec-form__item">
                                                     <label class="mscec-form__label">
                                                         Тип
