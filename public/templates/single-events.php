@@ -1,7 +1,8 @@
-<?php get_header(); ?>
+<?php
 
-<!-- <link rel='stylesheet' id='fontAwesome-css' href='https://мойсемейныйцентр.москва/wp-content/themes/msc-theme/assets/lib/font-awesome/font-awesome.min.css?ver=5.5.1' type='text/css' media='all' /> -->
-<!-- <link rel="stylesheet" href="https://xn--e1aaancaqclcc7aew1d7d.xn--80adxhks/wp-content/themes/msc-theme/style.css?ver=5.5.1"> -->
+get_header();
+
+?>
 
 <main id="content" class="msc-events-calendar msc-events-single">
     <div class="container">
@@ -32,6 +33,8 @@
                             $platform = carbon_get_post_meta(get_the_ID(), 'platform');
                             $link = carbon_get_post_meta(get_the_ID(), 'link');
                             $password = carbon_get_post_meta(get_the_ID(), 'password');
+                            $event_cat = carbon_get_post_meta(get_the_ID(), 'event_cat');
+                            $event_form = carbon_get_post_meta(get_the_ID(), 'event_form');
 
                             // Иногда ломает $post, поэтому вызывается последним
                             $organizer_slug = carbon_get_post_meta(get_the_ID(), 'organizer');
@@ -78,17 +81,13 @@
 
                                             if ($platform == 'WhatsApp') {
                                                 echo '<i class="fa fa-whatsapp" aria-hidden="true"></i>';
-                                            }
-                                            else if ($platform == 'YouTube') {
+                                            } else if ($platform == 'YouTube') {
                                                 echo '<i class="fa fa-youtube-play" aria-hidden="true"></i>';
-                                            }
-                                            else if ($platform == 'Zoom') {
+                                            } else if ($platform == 'Zoom') {
                                                 echo '<i class="fa fa-video-camera" aria-hidden="true"></i>';
-                                            }
-                                            else if ($platform == 'Skype') {
+                                            } else if ($platform == 'Skype') {
                                                 echo '<i class="fa fa-skype" aria-hidden="true"></i>';
-                                            }
-                                            else if ($platform == 'Вконтакте') {
+                                            } else if ($platform == 'Вконтакте') {
                                                 echo '<i class="fa fa-vk" aria-hidden="true"></i>';
                                             } else {
                                                 echo '<i class="fa fa-globe" aria-hidden="true"></i>';
@@ -105,10 +104,10 @@
 
                                         ?>
 
-                                        <div class="mscec-type-online__item">
-                                            <i class="fa fa-link" aria-hidden="true"></i>
-                                            <a href="<?= $link ?>" target="_blank" class="link link-orange">Ссылка на трансляцию</a>
-                                        </div>
+                                            <div class="mscec-type-online__item">
+                                                <i class="fa fa-link" aria-hidden="true"></i>
+                                                <a href="<?= $link ?>" target="_blank" class="link link-orange">Ссылка на трансляцию</a>
+                                            </div>
 
                                         <?php
 
@@ -215,10 +214,10 @@
                 </div>
 
                 <?php
-                
+
                 if (!wp_is_mobile()) {
 
-                    ?>
+                ?>
 
                     <footer class="post__footer">
                         <h2 class="post__title">
@@ -281,7 +280,7 @@
                         </div>
                     </footer>
 
-                    <?php
+                <?php
 
                 }
 

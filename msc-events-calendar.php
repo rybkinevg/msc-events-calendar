@@ -13,7 +13,7 @@
 
 // Если вызов файла был напрямую, то заблокировать
 if (!defined('ABSPATH')) {
-	die;
+    die;
 }
 
 # Константы
@@ -31,20 +31,20 @@ define('MSCEC_URL', plugin_dir_url(__FILE__));
 
 function activate_msc_events_calendar()
 {
-	require_once(MSCEC_DIR . 'includes/Activator.php');
-	MSCEC_Activator::activate();
+    require_once(MSCEC_DIR . 'includes/Activator.php');
+    MSCEC_Activator::activate();
 }
 
 function deactivate_msc_events_calendar()
 {
-	require_once(MSCEC_DIR . 'includes/Deactivator.php');
-	MSCEC_Deactivator::deactivate();
+    require_once(MSCEC_DIR . 'includes/Deactivator.php');
+    MSCEC_Deactivator::deactivate();
 }
 
 function uninstall_msc_events_calendar()
 {
-	require_once(MSCEC_DIR . 'includes/Uninstall.php');
-	MSCEC_Uninstall::uninstall();
+    require_once(MSCEC_DIR . 'includes/Uninstall.php');
+    MSCEC_Uninstall::uninstall();
 }
 
 register_activation_hook(__FILE__, 'activate_msc_events_calendar');
@@ -58,8 +58,8 @@ require(MSCEC_DIR . 'includes/Core.php');
 
 function run_msc_events_calendar()
 {
-	$plugin = new MSCEC_Core();
-	$plugin->run();
+    $plugin = new MSCEC_Core();
+    $plugin->run();
 }
 
 run_msc_events_calendar();

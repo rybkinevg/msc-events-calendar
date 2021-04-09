@@ -245,9 +245,9 @@ class MSCEC_Admin
 
         $overrides = ['test_form' => false];
 
-        add_filter( 'upload_dir', [$this, 'upload_file'] );
+        add_filter('upload_dir', [$this, 'upload_file']);
         $movefile = wp_handle_upload($file, $overrides);
-        remove_filter( 'upload_dir', [$this, 'upload_file'] );
+        remove_filter('upload_dir', [$this, 'upload_file']);
 
         $this->imported_file_path = $movefile['file'];
 
@@ -431,7 +431,9 @@ class MSCEC_Admin
             'place',
             'platform',
             'link',
-            'password'
+            'password',
+            'event_cat',
+            'event_form'
         ];
 
         $specific_meta_keys = [

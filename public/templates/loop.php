@@ -22,83 +22,82 @@ if ($query->have_posts()) {
 
         $search = (isset($_GET['events_title']) && !empty($_GET['events_title'])) ? $_GET['events_title'] : null;
 
-        ?>
+?>
 
-            <div class='mscec-query__info <?= $class ?>'>
-                <div class="mscec-query__count">
-                    <i class="fa fa-calendar-check-o sidebar-icon" aria-hidden="true"></i>
-                    <span class="mscec-query__text">Найдено <strong><?= $count ?></strong></span>
-                    <button class="mscec-sidebar-spoiler active">
-                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <div class="mscec-query__inner">
+        <div class='mscec-query__info <?= $class ?>'>
+            <div class="mscec-query__count">
+                <i class="fa fa-calendar-check-o sidebar-icon" aria-hidden="true"></i>
+                <span class="mscec-query__text">Найдено <strong><?= $count ?></strong></span>
+                <button class="mscec-sidebar-spoiler active">
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="mscec-query__inner">
 
-                    <?php
-                    
-                    if ($date) {
+                <?php
 
-                    ?>
+                if ($date) {
+
+                ?>
 
                     <div class='mscec-query__item'>
                         Выбранная дата: <?= $date ?>
                     </div>
 
-                    <?php
+                <?php
 
+                }
+
+                if ($type) {
+
+                    if ($type == 'online') {
+                        $type = 'Онлайн';
+                    } else if ($type == 'default') {
+                        $type = 'Очные';
                     }
 
-                    if ($type) {
+                ?>
 
-                        if ($type == 'online') {
-                            $type = 'Онлайн';
-                        }
-                        else if ($type == 'default') {
-                            $type = 'Очные';
-                        }
+                    <div class='mscec-query__item'>
+                        Тип мероприятий: <?= $type ?>
+                    </div>
 
-                        ?>
-        
-                        <div class='mscec-query__item'>
-                            Тип мероприятий: <?= $type ?>
-                        </div>
-        
-                        <?php
-                        
-                    }
+                <?php
 
-                    if ($organizer) {
+                }
 
-                        ?>
-        
-                        <div class='mscec-query__item'>
-                            Организатор: <?= $organizer ?>
-                        </div>
-        
-                        <?php
-        
-                    }
+                if ($organizer) {
 
-                    if ($search) {
+                ?>
 
-                        ?>
-        
-                        <div class='mscec-query__item'>
-                            Поисковый запрос: <?= $search ?>
-                        </div>
-        
-                        <?php
-        
-                    }
-                    
-                    ?>
-                </div>
+                    <div class='mscec-query__item'>
+                        Организатор: <?= $organizer ?>
+                    </div>
+
+                <?php
+
+                }
+
+                if ($search) {
+
+                ?>
+
+                    <div class='mscec-query__item'>
+                        Поисковый запрос: <?= $search ?>
+                    </div>
+
+                <?php
+
+                }
+
+                ?>
             </div>
+        </div>
 
-        <?php
+    <?php
     }
 
-?>
+    ?>
 
     <ul class="mscec-list list">
 
@@ -112,6 +111,8 @@ if ($query->have_posts()) {
             $time = carbon_get_post_meta(get_the_ID(), 'time_start') . ' - ' . carbon_get_post_meta(get_the_ID(), 'time_end');
             $type = carbon_get_post_meta(get_the_ID(), 'type');
             $link = wp_make_link_relative(get_permalink());
+            $event_cat = carbon_get_post_meta(get_the_ID(), 'event_cat');
+            $event_form = carbon_get_post_meta(get_the_ID(), 'event_form');
 
             // Иногда ломает $post, поэтому вызывается последним
             $organizer_slug = carbon_get_post_meta(get_the_ID(), 'organizer');
@@ -141,6 +142,23 @@ if ($query->have_posts()) {
                     <?php endif; ?>
                 </div>
                 <div class="mscec-event__content">
+
+                    <?php
+
+                    if ($organizer_name) {
+
+                    ?>
+
+                        <span class="mscec-event__cat">
+                            <?= $event_cat . ' / ' . $event_form ?>
+                        </span>
+
+                    <?php
+
+                    }
+
+                    ?>
+
                     <h3 class="mscec-event__title">
                         <a href="<?= $link ?>" class="link link-orange"><?= $title ?></a>
                     </h3>

@@ -37,9 +37,6 @@ $query = new WP_Query($args);
 
 ?>
 
-<link rel='stylesheet' id='fontAwesome-css' href='https://мойсемейныйцентр.москва/wp-content/themes/msc-theme/assets/lib/font-awesome/font-awesome.min.css?ver=5.5.1' type='text/css' media='all' />
-<link rel="stylesheet" href="https://xn--e1aaancaqclcc7aew1d7d.xn--80adxhks/wp-content/themes/msc-theme/style.css?ver=5.5.1">
-
 <main id="content" class="msc-events-calendar msc-events-archive">
     <div class="container">
         <section id="content__inner">
@@ -48,18 +45,18 @@ $query = new WP_Query($args);
                 <div class="row">
                     <div class="col col-one mscec-query">
 
-                    <?php
+                        <?php
 
-                    $events_titles = [
-                        '%d мероприятие',
-                        '%d мероприятия',
-                        '%d мероприятий'
-                    ];
-                    
-                    $date = $query->meta_query->queries['events-date']['value'] ? date('d.m.Y', strtotime($query->meta_query->queries['events-date']['value'])) : '';
-                    $count = MSCEC_Public::declOfNum($query->found_posts, $events_titles);
+                        $events_titles = [
+                            '%d мероприятие',
+                            '%d мероприятия',
+                            '%d мероприятий'
+                        ];
 
-                    ?>
+                        $date = $query->meta_query->queries['events-date']['value'] ? date('d.m.Y', strtotime($query->meta_query->queries['events-date']['value'])) : '';
+                        $count = MSCEC_Public::declOfNum($query->found_posts, $events_titles);
+
+                        ?>
 
                         <div class='mscec-query__info'>
                             <div class="mscec-query__count">
@@ -90,7 +87,7 @@ $query = new WP_Query($args);
                         </div>
                     </div>
                     <div class="col col-sidebar">
-                        <aside class="sidebar">
+                        <aside class="sidebar sidebar-sticky">
                             <div class="sidebar__item border-top-orange sidebar__calendar">
                                 <div class="mscec-loader">
                                     <div class="sk-fading-circle">
