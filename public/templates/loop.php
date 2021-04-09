@@ -145,7 +145,7 @@ if ($query->have_posts()) {
 
                     <?php
 
-                    if ($organizer_name) {
+                    if ($event_cat && $event_form) {
 
                     ?>
 
