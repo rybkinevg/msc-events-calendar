@@ -111,8 +111,8 @@ if ($query->have_posts()) {
             $time = carbon_get_post_meta(get_the_ID(), 'time_start') . ' - ' . carbon_get_post_meta(get_the_ID(), 'time_end');
             $type = carbon_get_post_meta(get_the_ID(), 'type');
             $link = wp_make_link_relative(get_permalink());
-            $event_cat = carbon_get_post_meta(get_the_ID(), 'event_cat');
-            $event_form = carbon_get_post_meta(get_the_ID(), 'event_form');
+            $event_cat = MSCEC_Public::get_event_cat(carbon_get_post_meta(get_the_ID(), 'event_cat'));
+            $event_form = MSCEC_Public::get_event_form(carbon_get_post_meta(get_the_ID(), 'event_form'));
 
             // Иногда ломает $post, поэтому вызывается последним
             $organizer_slug = carbon_get_post_meta(get_the_ID(), 'organizer');

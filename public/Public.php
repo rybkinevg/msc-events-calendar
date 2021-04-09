@@ -231,6 +231,46 @@ class MSCEC_Public
         return $link;
     }
 
+    public static function get_event_cat($key)
+    {
+        $cats = [
+            ''        => '-- выберите значение из списка --',
+            'ndro'    => 'Налаживание детско-родительских отношений',
+            'nomchs'  => 'Налаживание отношений между членами семьи',
+            'rsnik'   => 'Развитие социальных навыков и компетенций',
+            'pusadip' => 'Повышение уровня социальной адаптации детей и подростков'
+        ];
+
+        if (array_key_exists($key, $cats)) {
+
+            return $cats[$key];
+        } else {
+
+            return false;
+        }
+    }
+
+    public static function get_event_form($key)
+    {
+        $forms = [
+            ''     => '-- выберите значение из списка --',
+            'pt'   => 'Психологический тренинг',
+            'at'   => 'Арт-терапия',
+            'mk'   => 'Мастер-класс',
+            'siia' => 'Спортивные и иные активности',
+            'pk'   => 'Подростковый клуб',
+            'drz'  => 'Детско-родительское занятие'
+        ];
+
+        if (array_key_exists($key, $forms)) {
+
+            return $forms[$key];
+        } else {
+
+            return false;
+        }
+    }
+
     static function declOfNum($number, $titles)
     {
         $cases = array(2, 0, 1, 1, 1, 2);

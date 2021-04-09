@@ -33,8 +33,8 @@ get_header();
                             $platform = carbon_get_post_meta(get_the_ID(), 'platform');
                             $link = carbon_get_post_meta(get_the_ID(), 'link');
                             $password = carbon_get_post_meta(get_the_ID(), 'password');
-                            $event_cat = carbon_get_post_meta(get_the_ID(), 'event_cat');
-                            $event_form = carbon_get_post_meta(get_the_ID(), 'event_form');
+                            $event_cat = MSCEC_Public::get_event_cat(carbon_get_post_meta(get_the_ID(), 'event_cat'));
+                            $event_form = MSCEC_Public::get_event_form(carbon_get_post_meta(get_the_ID(), 'event_form'));
 
                             // Иногда ломает $post, поэтому вызывается последним
                             $organizer_slug = carbon_get_post_meta(get_the_ID(), 'organizer');
@@ -80,16 +80,22 @@ get_header();
                                             <?php
 
                                             if ($platform == 'WhatsApp') {
+
                                                 echo '<i class="fa fa-whatsapp" aria-hidden="true"></i>';
                                             } else if ($platform == 'YouTube') {
+
                                                 echo '<i class="fa fa-youtube-play" aria-hidden="true"></i>';
                                             } else if ($platform == 'Zoom') {
+
                                                 echo '<i class="fa fa-video-camera" aria-hidden="true"></i>';
                                             } else if ($platform == 'Skype') {
+
                                                 echo '<i class="fa fa-skype" aria-hidden="true"></i>';
                                             } else if ($platform == 'Вконтакте') {
+
                                                 echo '<i class="fa fa-vk" aria-hidden="true"></i>';
                                             } else {
+
                                                 echo '<i class="fa fa-globe" aria-hidden="true"></i>';
                                             }
 
