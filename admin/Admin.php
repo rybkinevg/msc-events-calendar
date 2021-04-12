@@ -504,18 +504,18 @@ class MSCEC_Admin
 
                         if (isset($value[$meta_key])) {
 
-                            $value = MSCEC_Public::get_event_cat_key($value[$meta_key]);
+                            $cat = MSCEC_Public::get_event_cat_key($value[$meta_key]);
 
-                            update_post_meta($post_id, '_' . $meta_key, $value);
+                            update_post_meta($post_id, '_' . $meta_key, $cat);
                         }
                     }
                     if ($meta_key == 'event_form') {
 
                         if (isset($value[$meta_key])) {
 
-                            $value = MSCEC_Public::get_event_form_key($value[$meta_key]);
+                            $form = MSCEC_Public::get_event_form_key($value[$meta_key]);
 
-                            update_post_meta($post_id, '_' . $meta_key, $value);
+                            update_post_meta($post_id, '_' . $meta_key, $form);
                         }
                     }
                 }
