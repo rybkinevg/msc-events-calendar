@@ -431,15 +431,15 @@ class MSCEC_Admin
             'place',
             'platform',
             'link',
-            'password',
-            'event_cat',
-            'event_form'
+            'password'
         ];
 
         $specific_meta_keys = [
             'type',
             'openness',
-            'organizer'
+            'organizer',
+            'event_cat',
+            'event_form'
         ];
 
         foreach ($array as $key => $value) {
@@ -498,6 +498,24 @@ class MSCEC_Admin
                             if ($organizer) {
                                 update_post_meta($post_id, '_' . $meta_key, $organizer->post_name);
                             }
+                        }
+                    }
+                    if ($meta_key == 'event_cat') {
+
+                        if (isset($value[$meta_key])) {
+
+                            $value = MSCEC_Public::get_event_cat_key($value[$meta_key]);
+
+                            update_post_meta($post_id, '_' . $meta_key, $value);
+                        }
+                    }
+                    if ($meta_key == 'event_form') {
+
+                        if (isset($value[$meta_key])) {
+
+                            $value = MSCEC_Public::get_event_form_key($value[$meta_key]);
+
+                            update_post_meta($post_id, '_' . $meta_key, $value);
                         }
                     }
                 }

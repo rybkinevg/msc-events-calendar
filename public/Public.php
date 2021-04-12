@@ -276,6 +276,19 @@ class MSCEC_Public
         }
     }
 
+    public static function get_event_cat_key($value)
+    {
+        $cats = self::get_event_cats();
+
+        if (in_array($value, $cats)) {
+
+            return array_search($value, $cats);
+        } else {
+
+            return false;
+        }
+    }
+
     // EVENT FORMS
 
     public static function get_event_forms()
@@ -299,6 +312,19 @@ class MSCEC_Public
         if (array_key_exists($key, $forms)) {
 
             return $forms[$key];
+        } else {
+
+            return false;
+        }
+    }
+
+    public static function get_event_form_key($value)
+    {
+        $forms = self::get_event_forms();
+
+        if (in_array($value, $forms)) {
+
+            return array_search($value, $forms);
         } else {
 
             return false;
